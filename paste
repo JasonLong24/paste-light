@@ -1,0 +1,62 @@
+#!/usr/bin/env bash
+
+EXEC_INIT=false
+EXEC_ADD=false
+
+function isInit() {
+  if [[ -f .paste ]]; then
+    return 0
+  else
+    return 1
+  fi
+}
+
+function initialize() {
+  if isInit; then echo Project already initialized && exit 0; else
+    mkdir posts && touch .paste
+    echo -e 'Project initialized\nSee --help for usage.'
+    exit 0
+  fi
+}
+
+function addPost() {
+  if isInit; then
+    touch posts/$POST_FILE.paste
+    if [ -z $EDITOR ]; then
+      nano posts/$POST_FILE.paste
+    else
+      $EDITOR posts/$POST_FILE.paste
+    fi
+    exit 0
+  fi
+}
+
+POSITIONAL=()
+while [[ $# -gt 0 ]]
+do
+key="$1"
+case $key in
+  -init|--initialize)
+  EXEC_INIT=true
+  shift
+  ;;
+  -a|--add)
+  if [[ $2 = "" ]] || [[ $2 =~ ^- ]]; then
+    echo add takes one arguement. See --help && exit 1
+  else
+    POST_FILE="$2"
+    EXEC_ADD=true
+  fi
+  shift
+  ;;
+  *)
+  POSITIONAL+=("$1")
+  shift
+  ;;
+esac
+done
+set -- "${POSITIONAL[@]}"
+
+if [[ $EXEC_INIT = true ]] && [[ $EXEC_ADD = true ]]; then echo You may not run initialize with other arguments. See --help.; exit 1; fi
+if [[ $EXEC_INIT = true ]]; then initialize; fi
+if [[ $EXEC_ADD = true ]]; then addPost; fi

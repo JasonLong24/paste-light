@@ -2,6 +2,7 @@
 
 EXEC_INIT=false
 EXEC_ADD=false
+EXEC_COMP=false
 
 function isInit() {
   if [[ -f .paste ]]; then
@@ -11,23 +12,49 @@ function isInit() {
   fi
 }
 
+function isOtherArgs() {
+  # Add Arguments that the user can execute
+  local poss_exec=( "$EXEC_INIT" "$EXEC_ADD" "$EXEC_COMP" )
+  for i in "${poss_exec[@]}"; do
+    if [[ $i = true ]]; then
+      count=$(expr $count + 1)
+    fi
+  done
+
+  if [[ $count -gt 1 ]]; then
+    return 0
+  else
+    return 1
+  fi
+}
+
 function initialize() {
-  if isInit; then echo Project already initialized && exit 0; else
-    mkdir posts && touch .paste
-    echo -e 'Project initialized\nSee --help for usage.'
-    exit 0
+  if isOtherArgs; then echo You cannot execute initialize command with other arguments. See --help. && exit 1; else
+    if isInit; then echo Project already initialized && exit 0; else
+      mkdir posts && touch .paste
+      echo -e 'Project initialized\nSee --help for usage.'
+      exit 0
+    fi
   fi
 }
 
 function addPost() {
-  if isInit; then
-    touch posts/$POST_FILE.paste
-    if [ -z $EDITOR ]; then
-      nano posts/$POST_FILE.paste
-    else
-      $EDITOR posts/$POST_FILE.paste
+  if isOtherArgs; then echo You cannot add a new post with other commands. See --help. && exit 1; else
+    if isInit; then
+      touch posts/$POST_FILE.paste
+      if [ -z $EDITOR ]; then
+        nano posts/$POST_FILE.paste
+      else
+        $EDITOR posts/$POST_FILE.paste
+      fi
+      exit 0
     fi
-    exit 0
+  fi
+}
+
+function genIndex() {
+  if isOtherArgs; then echo You cannot execute compile command with other arguments. See --help. && exit 1; else
+  echo compile time
   fi
 }
 
@@ -49,6 +76,10 @@ case $key in
   fi
   shift
   ;;
+  -c|--compile)
+  EXEC_COMP=true
+  shift
+  ;;
   *)
   POSITIONAL+=("$1")
   shift
@@ -57,6 +88,6 @@ esac
 done
 set -- "${POSITIONAL[@]}"
 
-if [[ $EXEC_INIT = true ]] && [[ $EXEC_ADD = true ]]; then echo You may not run initialize with other arguments. See --help.; exit 1; fi
 if [[ $EXEC_INIT = true ]]; then initialize; fi
 if [[ $EXEC_ADD = true ]]; then addPost; fi
+if [[ $EXEC_COMP = true ]]; then genIndex; fi

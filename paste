@@ -54,8 +54,31 @@ function addPost() {
 
 function genIndex() {
   if isOtherArgs; then echo You cannot execute compile command with other arguments. See --help. && exit 1; else
-  echo compile time
+    if isInit; then
+      local postCount=$(find ./posts -maxdepth 1 -type f | wc -l)
+      echo $postCount
+			for (( i=1; i<=$postCount; i++ )); do
+				getDate $i
+			done
+    else
+      echo This project is not initialized
+    fi
   fi
+}
+
+function isDate() {
+	if [[ $(cat $(find ./posts -type f | awk NR==$1) | awk 'NR==1 {print $1}') = "date:" ]]; then
+		return 0
+	else
+		return 1
+	fi
+}
+
+function getDate() {
+	if isDate $1; then
+		cat $(find ./posts -type f | awk NR==$1) | awk NR==1 | sed 's/date: //g'
+	fi
+
 }
 
 POSITIONAL=()

@@ -55,10 +55,16 @@ function addPost() {
 function genIndex() {
   if isOtherArgs; then echo You cannot execute compile command with other arguments. See --help. && exit 1; else
     if isInit; then
+			mkdir -p build
       local postCount=$(find ./posts -maxdepth 1 -type f | wc -l)
-      echo $postCount
 			for (( i=1; i<=$postCount; i++ )); do
+				local fileName=$(find ./posts -type f | awk NR==$i)
+				# Build Files without comments and HTML format
+				cat $fileName | sed -e '/^\s*{{*.*$/d' > build/$(echo $fileName | sed 's/.\/posts\///g').paste
+
+				getPostName $i
 				getDate $i
+				getFileType $i
 			done
     else
       echo This project is not initialized
@@ -66,8 +72,24 @@ function genIndex() {
   fi
 }
 
+function isPostName() {
+	if cat $(find ./posts -type f | awk NR==$1) | sed -e 's/{{\*//g' -e 2q | grep 'title:' > /dev/null 2>&1; then
+		return 0
+	else
+		return 1
+	fi
+}
+
+function getPostName() {
+	if isPostName $i; then
+		cat $(find ./posts -type f | awk NR==$i) | sed -e 's/{{\*//g' -e 2q | grep 'title:' | cut -d : -f2 | sed -e 's/^[ \t]*//'
+	else
+		echo -e 'Title not found for' $(find ./posts -type f | awk NR==$i) '\nPlease add a title' && exit 1
+	fi
+}
+
 function isDate() {
-	if [[ $(cat $(find ./posts -type f | awk NR==$1) | awk 'NR==1 {print $1}') = "date:" ]]; then
+	if cat $(find ./posts -type f | awk NR==$1) | sed -e 's/{{\*//g' -e 2q | grep 'date:' > /dev/null 2>&1; then
 		return 0
 	else
 		return 1
@@ -76,9 +98,12 @@ function isDate() {
 
 function getDate() {
 	if isDate $1; then
-		cat $(find ./posts -type f | awk NR==$1) | awk NR==1 | sed 's/date: //g'
+		cat $(find ./posts -type f | awk NR==$i) | sed -e 's/{{\*//g' -e 2q | grep 'date:' | cut -d : -f2 | sed -e 's/^[ \t]*//'
 	fi
+}
 
+function getFileType() {
+	echo $(find ./posts -type f | awk NR==$1 | sed 's/.\/posts\///g' | cut -d . -f2)
 }
 
 POSITIONAL=()

@@ -57,22 +57,22 @@ function genIndex() {
     if isInit; then
 			mkdir -p build
       local postCount=$(find ./posts -maxdepth 1 -type f | wc -l)
-			if [ -f test.html ]; then rm test.html && touch test.html; else touch test.html; fi
-			genHeader test.html
+			if [ -f index.html ]; then rm index.html && touch index.html; else touch index.html; fi
+			genHeader index.html
 			for (( i=1; i<=$postCount; i++ )); do
 				local fileName=$(find ./posts -type f | awk NR==$i)
 				# Build Files without comments and HTML format
 				cat $fileName | sed -e '/^\s*{{*.*$/d' > build/$(echo $fileName | sed 's/.\/posts\///g').paste
 
 				# Generate Table Rows
-				echo "<tr class=\"paste-tbl-row\">" >> test.html
-				genRow test.html "$(getPostName $i)"
-				genRow test.html "$(getDate $i)"
-				genRow test.html "$(getFileType $i)"
-				genRow test.html "<a href="build/$(echo $fileName | sed 's/.\/posts\///g').paste">get</a>"
-				echo "</tr>" >> test.html
+				echo "<tr class=\"paste-tbl-row\">" >> index.html
+				genRow index.html "$(getPostName $i)"
+				genRow index.html "$(getDate $i)"
+				genRow index.html "$(getFileType $i)"
+				genRow index.html "<a href="build/$(echo $fileName | sed 's/.\/posts\///g').paste">GET</a>"
+				echo "</tr>" >> index.html
 			done
-			printf '%s\n%s' '</table>' '</html>' >> test.html
+			printf '%s\n%s' '</table>' '</html>' >> index.html
     else
       echo This project is not initialized
     fi
@@ -116,7 +116,7 @@ function getFileType() {
 function genHeader() {
 	printf '%s\n%s\n%s\n%s' '<html>' '<header>' '<link rel="stylesheet" type="text/css" href="style.css">' '</header>' > $1
 	printf '\n%s\n%s\n' '<table id="paste-tbl-container">' '<tr class="paste-tbl-row">' >> $1
-	printf  '%s\n%s\n%s\n%s\n%s\n' '<th class="paste-tbl-header">Name</th>' '<th class="paste-tbl-header">Date</th>' '<th class="paste-tbl-header">Filetype</th>' '<th class="paste-tbl-header">Get</th>' '</tr>' >> $1
+	printf  '%s\n%s\n%s\n%s\n%s\n' '<th class="paste-tbl-header">Name</th>' '<th class="paste-tbl-header">Date</th>' '<th class="paste-tbl-header">Filetype</th>' '<th class="paste-tbl-header">GET</th>' '</tr>' >> $1
 }
 
 function genRow() {

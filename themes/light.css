@@ -1,0 +1,24 @@
+#paste-tbl-container, .paste-tbl-header, .paste-tbl-data {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+#paste-tbl-container {
+  width: 100%;
+}
+
+.paste-tbl-header, .paste-tbl-data {
+  text-align: left;
+}
+
+.paste-tbl-header {
+  background-color: black;
+  color: white;
+}
+
+#paste-tbl-container tr:nth-child(even) {
+  background-color: #eee;
+}
+#paste-tbl-container tr:nth-child(odd) {
+  background-color: #fff;
+}

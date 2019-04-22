@@ -3,6 +3,7 @@
 function install() {
   local _current_dir=$(pwd)
   local _project_dir="/tmp/paste-light"
+  if [ -d /tmp/paste-light ]; then sudo rm -rf /tmp/paste-light; fi
   sudo git clone -q https://github.com/jsnal/paste-light /tmp/paste-light 2>/dev/null
   sudo cp -fv $_project_dir/paste /usr/bin/paste
 

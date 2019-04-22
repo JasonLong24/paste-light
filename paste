@@ -66,35 +66,33 @@ function addPost() {
 }
 
 function genIndex() {
-    if isOtherArgs; then echo You cannot execute compile command with other arguments. See --help. && exit 1; else
-        if isInit; then
-            mkdir -p build
-            local postCount=$(find ./posts -maxdepth 1 -type f | wc -l)
-            if [ -f index.html ]; then rm index.html && touch index.html; else touch index.html; fi
-            genHeader index.html
-            for (( i=1; i<=$postCount; i++ )); do
-                local fileName=$(find ./posts -type f | awk NR==$i)
-                # Build Files without comments and HTML format
-                cat $fileName | sed -e '/^\s*{{*.*$/d' > build/$(echo $fileName | sed 's/.\/posts\///g').paste
+      if isInit; then
+          mkdir -p build
+          local postCount=$(find ./posts -maxdepth 1 -type f | wc -l)
+          if [ -f index.html ]; then rm index.html && touch index.html; else touch index.html; fi
+          genHeader index.html
+          for (( i=1; i<=$postCount; i++ )); do
+              local fileName=$(find ./posts -type f | awk NR==$i)
+              # Build Files without comments and HTML format
+              cat $fileName | sed -e '/^\s*{{*.*$/d' > build/$(echo $fileName | sed 's/.\/posts\///g').paste
 
-                # Generate Table Rows
-                echo "<tr class=\"paste-tbl-row\">" >> index.html
-                genRow index.html "$(getPostName $i)"
-                genRow index.html "$(getDate $i)"
-                genRow index.html "$(getFileType $i)"
-                genRow index.html "<a href="build/$(echo $fileName | sed 's/.\/posts\///g').paste">GET</a>"
-                echo "</tr>" >> index.html
-            done
-            if [[ $SEARCH_BAR = true ]]; then
-                printf '%s\n' "<input type='text' id='table-filter' onkeyup='filter()' placeholder='Search Posts'>" >> index.html
-            fi
-            printf '%s\n' "<p id='paste-title'>$PASTE_TITLE</p>" >> index.html
-            printf '%s\n' '</table>' >> index.html
-            printf '%s\n%s'  "<footer>Last Updated: $(date +'%m/%d/%Y')</footer>" '</html>' >> index.html
-        else
-            echo This project is not initialized
-        fi
-    fi
+              # Generate Table Rows
+              echo "<tr class=\"paste-tbl-row\">" >> index.html
+              genRow index.html "$(getPostName $i)"
+              genRow index.html "$(getDate $i)"
+              genRow index.html "$(getFileType $i)"
+              genRow index.html "<a href="build/$(echo $fileName | sed 's/.\/posts\///g').paste">GET</a>"
+              echo "</tr>" >> index.html
+          done
+          if [[ $SEARCH_BAR = true ]]; then
+              printf '%s\n' "<input type='text' id='table-filter' onkeyup='filter()' placeholder='Search Posts'>" >> index.html
+          fi
+          printf '%s\n' "<p id='paste-title'>$PASTE_TITLE</p>" >> index.html
+          printf '%s\n' '</table>' >> index.html
+          printf '%s\n%s'  "<footer>Last Updated: $(date +'%m/%d/%Y')</footer>" '</html>' >> index.html
+      else
+          echo This project is not initialized
+      fi
 }
 
 function isPostName() {

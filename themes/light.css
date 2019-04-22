@@ -19,6 +19,23 @@
 #paste-tbl-container tr:nth-child(even) {
   background-color: #eee;
 }
+
 #paste-tbl-container tr:nth-child(odd) {
   background-color: #fff;
+}
+
+#paste-title {
+  display: inline;
+  float: left;
+  margin: 0px;
+}
+
+#table-filter {
+  margin-bottom: 4px;
+  float: right;
+}
+
+footer {
+  padding-top: 2px;
+  text-align: center;
 }

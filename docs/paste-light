@@ -1,0 +1,18 @@
+.\" Manpage for paste-light.
+.TH paste-light 1 "22 April 2019" "1.0" "User Commands"
+.SH NAME
+paste-light \- lightweight paste manager for selfhosting.
+.SH SYNOPSIS
+paste [OPTION]...
+.SH DESCRIPTION
+paste-light is a lightweight manager for raw snippets of code. paste-light will create a frontend interface that can be used to view your pastes anywhere. You can also push a new paste from anywhere using netcat. See NC(1).
+.SH OPTIONS
+The paste does not take any options.
+.SH SEE ALSO
+NC(8) and full documentation at <https://github.com/jsnal/paste-light/README.md>
+.SH BUGS
+No known bugs.
+.SH WWW
+https://github.com/jsnal/paste-light
+.SH AUTHOR
+jsnal <jasonlongball@gmail.com>

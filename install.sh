@@ -13,11 +13,16 @@ function install() {
     sudo cp -rv $_project_dir/themes /usr/local/share/paste-light/themes
   fi
   sudo cp -fv $_project_dir/README.md /usr/local/share/paste-light/README
+
+  # Setup man page
+  sudo cp -rv $_project_dir/docs/paste-light /usr/local/man/man1/paste-light.1
+  sudo gzip /usr/local/man/man1/paste-light.1
 }
 
 function remove() {
   sudo rm -v /usr/bin/paste
   sudo rm -rvf /usr/local/share/paste-light
+  sudo rm -v /usr/local/man/man1/paste-light.1.gz
 }
 
 if [[ $1 = "-u" ]]; then

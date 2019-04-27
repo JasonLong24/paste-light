@@ -1,37 +1,52 @@
 #include <iostream>
 #include <getopt.h>
+#include <sys/stat.h>
+#include <fstream>
 
-void
-show_usage(const std::string& argv)
+void copy_paste(const std::string& source, const std::string& destination)
+{
+  std::ifstream src(source, std::ios::binary);
+  std::ofstream dst(destination,   std::ios::binary);
+  dst << src.rdbuf();
+}
+
+bool is_paste_init()
+{
+    std::ifstream infile(".paste");
+    return infile.good();
+}
+
+void show_usage(const std::string& argv)
 {
     std::cout << "Usage: " << argv << " NAME"
               << std::endl;
 }
 
-void
-test_print()
-{
-    std::cout << "Test Output" << std::endl;
-}
-
-void
-paste_add(std::string filename)
+void paste_add(std::string filename)
 {
     std::cout << filename << std::endl;
 }
 
+int paste_init()
+{
+  if(is_paste_init()) { std::cout << "Project already initialized\nSee --help for usage." << std::endl; return 1; }
+  mkdir("posts", 0777);
+  mkdir("js", 0777);
+  std::ofstream outfile (".paste"); outfile.close();
+  copy_paste("/usr/local/share/paste-light/themes/light.css", "style.css");
+  copy_paste("/usr/local/share/paste-light/themes/js/index.js", "js/index.js");
+  std::cout << "Project initialized\nSee --help for usage." << std::endl;
+}
+
 int parse_arguments(const int argc, char* argv[])
 {
-    if (argc < 2)
-    {
-        show_usage(argv[0]);
-        return 1;
-    }
+    if (argc < 2) { show_usage(argv[0]); }
 
-    const char* const short_opts = "a:ct:s:h";
+    const char* const short_opts = "ia:ct:s:h";
     const option long_opts[] =
     {
         {"add", required_argument, nullptr, 'a'},
+        {"init", no_argument, nullptr, 'i'},
         {"compile", no_argument, nullptr, 'c'},
         {"title", required_argument, nullptr, 't'},
         {"searchbar", required_argument, nullptr, 's'},
@@ -48,14 +63,13 @@ int parse_arguments(const int argc, char* argv[])
 
         switch (opt)
         {
-            case 'a':
-                paste_add(std::string(optarg));
-                break;
 
             case 'c':
                 std::cout << "Compile" << std::endl;
                 break;
 
+            case 'a': paste_add(std::string(optarg)); break;
+            case 'i': paste_init(); break;
             case 'h':
             case '?':
             default:

@@ -3,6 +3,7 @@
 #include <sys/stat.h>
 #include <fstream>
 #include <iomanip>
+#include "compiler.h"
 
 void copy_paste(const std::string& source, const std::string& destination)
 {
@@ -27,9 +28,9 @@ int paste_add(const std::string& filename)
 {
     auto time = std::time(nullptr);
     std::ofstream outfile ("posts/" + filename);
-    outfile << "//*date: " << std::put_time(std::gmtime(&time), "%D")
-            << "\n//*title: Placeholder Title\n"
-            << "//*filetype: " << filename.substr(filename.find_last_of(".") + 1)
+    outfile << "//*date=" << std::put_time(std::gmtime(&time), "%D")
+            << "\n//*title=Placeholder Title\n"
+            << "//*filetype=" << filename.substr(filename.find_last_of(".") + 1)
             << std::endl;
     outfile.close();
     std::cout << "Generated posts/" << filename << std::endl;
@@ -84,7 +85,7 @@ int parse_arguments(const int argc, char* argv[])
         {
 
             case 'c':
-                std::cout << "Compile" << std::endl;
+                paste_compile();
                 break;
 
             case 'a':

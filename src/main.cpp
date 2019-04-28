@@ -2,12 +2,13 @@
 #include <getopt.h>
 #include <sys/stat.h>
 #include <fstream>
+#include <iomanip>
 
 void copy_paste(const std::string& source, const std::string& destination)
 {
-  std::ifstream src(source, std::ios::binary);
-  std::ofstream dst(destination,   std::ios::binary);
-  dst << src.rdbuf();
+    std::ifstream src(source, std::ios::binary);
+    std::ofstream dst(destination,   std::ios::binary);
+    dst << src.rdbuf();
 }
 
 bool is_paste_init()
@@ -22,25 +23,37 @@ void show_usage(const std::string& argv)
               << std::endl;
 }
 
-void paste_add(std::string filename)
+int paste_add(const std::string& filename)
 {
-    std::cout << filename << std::endl;
+    auto time = std::time(nullptr);
+    std::ofstream outfile ("posts/" + filename);
+    outfile << "//*date: " << std::put_time(std::gmtime(&time), "%D")
+            << "\n//*title: Placeholder Title\n"
+            << "//*filetype: " << filename.substr(filename.find_last_of(".") + 1)
+            << std::endl;
+    outfile.close();
+    std::cout << "Generated posts/" << filename << std::endl;
 }
 
 int paste_init()
 {
-  if(is_paste_init()) { std::cout << "Project already initialized\nSee --help for usage." << std::endl; return 1; }
-  mkdir("posts", 0777);
-  mkdir("js", 0777);
-  std::ofstream outfile (".paste"); outfile.close();
-  copy_paste("/usr/local/share/paste-light/themes/light.css", "style.css");
-  copy_paste("/usr/local/share/paste-light/themes/js/index.js", "js/index.js");
-  std::cout << "Project initialized\nSee --help for usage." << std::endl;
+    if(is_paste_init()) { std::cout << "Project already initialized\nSee --help for usage." << std::endl; return 1; }
+
+    mkdir("posts", 0777);
+    mkdir("js", 0777);
+    std::ofstream outfile (".paste");
+    outfile.close();
+    copy_paste("/usr/local/share/paste-light/themes/light.css", "style.css");
+    copy_paste("/usr/local/share/paste-light/themes/js/index.js", "js/index.js");
+    std::cout << "Project initialized\nSee --help for usage." << std::endl;
 }
 
 int parse_arguments(const int argc, char* argv[])
 {
-    if (argc < 2) { show_usage(argv[0]); }
+    if (argc < 2)
+    {
+        show_usage(argv[0]);
+    }
 
     const char* const short_opts = "ia:ct:s:h";
     const option long_opts[] =
@@ -61,6 +74,12 @@ int parse_arguments(const int argc, char* argv[])
         if (-1 == opt)
             break;
 
+        if(!is_paste_init() && opt != 'i')
+        {
+            std::cout << "Please initialize this project.\n See --help for usage." << std::endl;
+            return 1;
+        }
+
         switch (opt)
         {
 
@@ -68,8 +87,14 @@ int parse_arguments(const int argc, char* argv[])
                 std::cout << "Compile" << std::endl;
                 break;
 
-            case 'a': paste_add(std::string(optarg)); break;
-            case 'i': paste_init(); break;
+            case 'a':
+                paste_add(std::string(optarg));
+                break;
+
+            case 'i':
+                paste_init();
+                break;
+
             case 'h':
             case '?':
             default:

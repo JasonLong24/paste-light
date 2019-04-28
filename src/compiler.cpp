@@ -45,21 +45,35 @@ std::string compile_get_id(std::string file, std::string id)
 	 return	cline.erase(0, id.length());
 }
 
+void compile_table_header(std::ostream& os)
+{
+		os << "<html>\n<header>\n<link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\">\n<script charset='utf-8' src='js/index.js'></script>\n</header>\n"
+			 << "<table id=\"paste-tbl-container\">\n<tr class=\"paste-tbl-row\">\n"
+			 << "<th class=\"paste-tbl-header\">Name</th>\n<th class=\"paste-tbl-header\">Date</th>\n<th class=\"paste-tbl-header\">Filetype</th>\n<th class=\"paste-tbl-header\">View</th>\n</tr>"
+			 << std::endl;
+}
+
+void compile_table_row(std::ostream& os, const std::string& value)
+{
+		os << "<td class=\"paste-tbl-data\">" << value << "</td>" << std::endl;
+}
+
 int paste_compile()
 {
-    // Gen header
-    // For loop of each file
-    // End Loop
-    // Footer
-
     std::vector<std::string> files = std::vector<std::string>();
     get_file_list("posts", files);
 
+		std::ofstream outfile ("index.html");
+
+		compile_table_header(outfile);
+
     for (unsigned int i = 0;i < files.size();i++) {
-        std::cout << compile_get_id(files[i], "//*title=")
-									<< compile_get_id(files[i], "//*date=")
-									<< compile_get_id(files[i], "//*filetype=")
-                  << std::endl;
-    }
+				outfile << "<tr class=\"paste-tbl-row\">" << std::endl;
+				compile_table_row(outfile, compile_get_id(files[i], "//*title="));
+				compile_table_row(outfile, compile_get_id(files[i], "//*date="));
+				compile_table_row(outfile, compile_get_id(files[i], "//*filetype="));
+				outfile << "</tr>" << std::endl;
+		}
+		outfile.close();
     return 0;
 }

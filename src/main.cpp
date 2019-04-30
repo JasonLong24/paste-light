@@ -6,6 +6,7 @@
 #include "compiler.h"
 
 std::string paste_title = "";
+std::string paste_output = "index.html";
 
 void copy_paste(const std::string& source, const std::string& destination)
 {
@@ -58,13 +59,14 @@ int parse_arguments(const int argc, char* argv[])
         show_usage(argv[0]);
     }
 
-    const char* const short_opts = "ia:ct:sh";
+    const char* const short_opts = "ia:ct:o:sh";
     const option long_opts[] =
     {
         {"add", required_argument, nullptr, 'a'},
         {"init", no_argument, nullptr, 'i'},
         {"compile", no_argument, nullptr, 'c'},
         {"title", required_argument, nullptr, 't'},
+        {"out", required_argument, nullptr, 'o'},
         {"searchbar", no_argument, nullptr, 's'},
         {"help", no_argument, nullptr, 'h'},
         {nullptr, no_argument, nullptr, 0}
@@ -102,9 +104,13 @@ int parse_arguments(const int argc, char* argv[])
             case 's':
                 paste_searchbar();
                 break;
+
             case 't':
                 paste_title = std::string(optarg);
-                std::cout << paste_title << std::endl;
+                break;
+
+            case 'o':
+                paste_output = std::string(optarg);
                 break;
 
             case 'h':

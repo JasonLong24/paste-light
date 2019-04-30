@@ -95,37 +95,43 @@ void compile_table_footer(std::ostream& os)
     os << "<footer>Last Updated: " << std::put_time(std::gmtime(&time), "%D") << "</footer>" << std::endl;
 }
 
+void compile_table(std::vector<std::string> files, std::ostream& os)
+{
+    for (unsigned int i = 0; i < files.size(); i++)
+    {
+        std::cout << "Found -> posts/" << files[i] << std::endl;
+        format_file(files[i]);
+        os << "<tr class=\"paste-tbl-row\">" << std::endl;
+        compile_table_row(os, compile_get_id(files[i], "//*title="));
+        compile_table_row(os, compile_get_id(files[i], "//*date="));
+        compile_table_row(os, compile_get_id(files[i], "//*filetype="));
+        compile_table_row(os, "<a href=\"build/" + files[i] + ".paste\">GET</a>");
+        os << "</tr>" << std::endl;
+    }
+}
+
 int paste_compile()
 {
     std::vector<std::string> files = std::vector<std::string>();
     get_file_list("posts", files);
 
-    std::ofstream outfile ("index.html");
+    std::ofstream outfile (paste_output);
+
+    std::cout << "Generating Table" << std::endl;
+    compile_table_header(outfile);
+    outfile << "</table>" << std::endl;
+
+    compile_table(files, outfile);
 
     if(sb)
     {
       std::cout << "Generating Searchbar" << std::endl;
       outfile   << "<input type='text' id='table-filter' onkeyup='filter()' placeholder='Search Posts'>" << std::endl;
     }
+    outfile << "<p id=\"paste-title\">" << paste_title << "</p>" << std::endl;
 
-    std::cout << paste_title << std::endl;
-    std::cout << "Generating Table" << std::endl;
-    compile_table_header(outfile);
-
-    for (unsigned int i = 0; i < files.size(); i++)
-    {
-        std::cout << "Found -> posts/" << files[i] << std::endl;
-        format_file(files[i]);
-        outfile << "<tr class=\"paste-tbl-row\">" << std::endl;
-        compile_table_row(outfile, compile_get_id(files[i], "//*title="));
-        compile_table_row(outfile, compile_get_id(files[i], "//*date="));
-        compile_table_row(outfile, compile_get_id(files[i], "//*filetype="));
-        compile_table_row(outfile, "<a href=\"build/" + files[i] + ".paste\">GET</a>");
-        outfile << "</tr>" << std::endl;
-    }
-    outfile << "</table>" << std::endl;
     compile_table_footer(outfile);
     outfile.close();
-    std::cout << "Compiled to index.html" << std::endl;
+    std::cout << "Compiled to " << paste_output << std::endl;
     return 0;
 }

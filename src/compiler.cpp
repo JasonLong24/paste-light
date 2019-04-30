@@ -8,6 +8,8 @@
 #include <iomanip>
 #include "compiler.h"
 
+bool sb = false;
+
 int get_file_list(std::string dir, std::vector<std::string> &files)
 {
     DIR *dp;
@@ -26,6 +28,11 @@ int get_file_list(std::string dir, std::vector<std::string> &files)
     files.erase(std::remove(files.begin(), files.end(), ".."), files.end());
     closedir(dp);
     return 0;
+}
+
+void paste_searchbar()
+{
+    sb = true;
 }
 
 std::string get_file(std::string file)
@@ -95,10 +102,19 @@ int paste_compile()
 
     std::ofstream outfile ("index.html");
 
+    if(sb)
+    {
+      std::cout << "Generating Searchbar" << std::endl;
+      outfile   << "<input type='text' id='table-filter' onkeyup='filter()' placeholder='Search Posts'>" << std::endl;
+    }
+
+    std::cout << paste_title << std::endl;
+    std::cout << "Generating Table" << std::endl;
     compile_table_header(outfile);
 
     for (unsigned int i = 0; i < files.size(); i++)
     {
+        std::cout << "Found -> posts/" << files[i] << std::endl;
         format_file(files[i]);
         outfile << "<tr class=\"paste-tbl-row\">" << std::endl;
         compile_table_row(outfile, compile_get_id(files[i], "//*title="));
@@ -110,5 +126,6 @@ int paste_compile()
     outfile << "</table>" << std::endl;
     compile_table_footer(outfile);
     outfile.close();
+    std::cout << "Compiled to index.html" << std::endl;
     return 0;
 }

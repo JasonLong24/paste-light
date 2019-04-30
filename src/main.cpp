@@ -5,6 +5,8 @@
 #include <iomanip>
 #include "compiler.h"
 
+std::string paste_title = "";
+
 void copy_paste(const std::string& source, const std::string& destination)
 {
     std::ifstream src(source, std::ios::binary);
@@ -56,14 +58,14 @@ int parse_arguments(const int argc, char* argv[])
         show_usage(argv[0]);
     }
 
-    const char* const short_opts = "ia:ct:s:h";
+    const char* const short_opts = "ia:ct:sh";
     const option long_opts[] =
     {
         {"add", required_argument, nullptr, 'a'},
         {"init", no_argument, nullptr, 'i'},
         {"compile", no_argument, nullptr, 'c'},
         {"title", required_argument, nullptr, 't'},
-        {"searchbar", required_argument, nullptr, 's'},
+        {"searchbar", no_argument, nullptr, 's'},
         {"help", no_argument, nullptr, 'h'},
         {nullptr, no_argument, nullptr, 0}
     };
@@ -84,6 +86,7 @@ int parse_arguments(const int argc, char* argv[])
         switch (opt)
         {
 
+            // TODO: Make paste_compile always execute last instead of the first time it appears.
             case 'c':
                 paste_compile();
                 break;
@@ -94,6 +97,14 @@ int parse_arguments(const int argc, char* argv[])
 
             case 'i':
                 paste_init();
+                break;
+
+            case 's':
+                paste_searchbar();
+                break;
+            case 't':
+                paste_title = std::string(optarg);
+                std::cout << paste_title << std::endl;
                 break;
 
             case 'h':

@@ -7,6 +7,7 @@
 #include <vector>
 #include <iomanip>
 #include "compiler.h"
+#include "html_generator.h"
 
 bool sb = false;
 
@@ -78,21 +79,23 @@ void format_file(const std::string& file)
 
 void compile_table_header(std::ostream& os)
 {
-    os << "<html>\n<header>\n<link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\">\n<script charset='utf-8' src='js/index.js'></script>\n</header>\n"
-       << "<table id=\"paste-tbl-container\">\n<tr class=\"paste-tbl-row\">\n"
-       << "<th class=\"paste-tbl-header\">Name</th>\n<th class=\"paste-tbl-header\">Date</th>\n<th class=\"paste-tbl-header\">Filetype</th>\n<th class=\"paste-tbl-header\">View</th>\n</tr>"
-       << std::endl;
+		html_generate_tag_start(os, "html");
+		html_generate_tag_start(os, "header");
+		html_generate_link(os);
+		html_generate_script(os);
+		html_generate_tag_end(os, "header");
+		html_generate_tag_start_id(os, "table", "paste-tbl-container");
+		html_generate_tag_start_class(os, "tr", "paste-tbl-row");
+		html_generate_tag_class(os, "th", "Name", "paste-tbl-header");
+		html_generate_tag_class(os, "th", "Date", "paste-tbl-header");
+		html_generate_tag_class(os, "th", "Filetype", "paste-tbl-header");
+		html_generate_tag_class(os, "th", "View", "paste-tbl-header");
+		html_generate_tag_end(os, "tr");
 }
 
 void compile_table_row(std::ostream& os, const std::string& value)
 {
-    os << "<td class=\"paste-tbl-data\">" << value << "</td>" << std::endl;
-}
-
-void compile_table_footer(std::ostream& os)
-{
-    auto time = std::time(nullptr);
-    os << "<footer>Last Updated: " << std::put_time(std::gmtime(&time), "%D") << "</footer>" << std::endl;
+		html_generate_tag_class(os, "td", value, "paste-tbl-data");
 }
 
 void compile_table(std::vector<std::string> files, std::ostream& os)
@@ -101,13 +104,14 @@ void compile_table(std::vector<std::string> files, std::ostream& os)
     {
         std::cout << "Found -> posts/" << files[i] << std::endl;
         format_file(files[i]);
-        os << "<tr class=\"paste-tbl-row\">" << std::endl;
+				html_generate_tag_start_class(os, "tr", "paste-tbl-row");
         compile_table_row(os, compile_get_id(files[i], "//*title="));
         compile_table_row(os, compile_get_id(files[i], "//*date="));
         compile_table_row(os, compile_get_id(files[i], "//*filetype="));
         compile_table_row(os, "<a href=\"build/" + files[i] + ".paste\">GET</a>");
-        os << "</tr>" << std::endl;
+				html_generate_tag_end(os, "tr");
     }
+		html_generate_tag_end(os, "table");
 }
 
 int paste_compile()
@@ -117,20 +121,19 @@ int paste_compile()
 
     std::ofstream outfile (paste_output);
 
-    std::cout << "Generating Table" << std::endl;
-    compile_table_header(outfile);
-    outfile << "</table>" << std::endl;
-
-    compile_table(files, outfile);
-
     if(sb)
     {
       std::cout << "Generating Searchbar" << std::endl;
       outfile   << "<input type='text' id='table-filter' onkeyup='filter()' placeholder='Search Posts'>" << std::endl;
     }
-    outfile << "<p id=\"paste-title\">" << paste_title << "</p>" << std::endl;
 
-    compile_table_footer(outfile);
+		html_generate_tag_id(outfile, "p", paste_title, "paste-title");
+    std::cout << "Generating Table" << std::endl;
+    compile_table_header(outfile);
+    compile_table(files, outfile);
+
+		html_generate_footer(outfile);
+
     outfile.close();
     std::cout << "Compiled to " << paste_output << std::endl;
     return 0;

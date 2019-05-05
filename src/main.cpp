@@ -1,12 +1,19 @@
 #include <iostream>
 #include <getopt.h>
+#include <sstream>
 #include <sys/stat.h>
 #include <fstream>
 #include <iomanip>
+#include <algorithm>
+#include <dirent.h>
 #include "compiler.h"
+#include "configuration.h"
 
-std::string paste_title = "";
-std::string paste_output = "index.html";
+Configuration config;
+std::string paste_config = ".paste";
+std::string paste_title;
+std::string paste_output;
+std::string paste_style;
 
 void copy_paste(const std::string& source, const std::string& destination)
 {
@@ -41,11 +48,19 @@ int paste_add(const std::string& filename)
 
 int paste_init()
 {
-    if(is_paste_init()) { std::cout << "Project already initialized\nSee --help for usage." << std::endl; return 1; }
+    if(is_paste_init())
+    {
+        std::cout << "Project already initialized\nSee --help for usage." << std::endl;
+        return 1;
+    }
 
     mkdir("posts", 0777);
     mkdir("js", 0777);
     std::ofstream outfile (".paste");
+    outfile << "paste_style=style.css" << std::endl;
+    outfile << "paste_output=index.html" << std::endl;
+    outfile << "paste_searchbar=false" << std::endl;
+    outfile << "paste_title=Pastebin" << std::endl;
     outfile.close();
     copy_paste("/usr/local/share/paste-light/themes/light.css", "style.css");
     copy_paste("/usr/local/share/paste-light/themes/js/index.js", "js/index.js");
@@ -68,12 +83,29 @@ int parse_arguments(const int argc, char* argv[])
         {"title", required_argument, nullptr, 't'},
         {"out", required_argument, nullptr, 'o'},
         {"searchbar", no_argument, nullptr, 's'},
+        {"style", required_argument, nullptr, 160},
+        {"config", required_argument, nullptr, 161},
         {"help", no_argument, nullptr, 'h'},
         {nullptr, no_argument, nullptr, 0}
     };
 
+    if(is_paste_init())
+    {
+        config.Load(paste_config);
+
+        if(!config.Get("paste_style", paste_style)   ||
+           !config.Get("paste_title", paste_title)   ||
+           !config.Get("paste_searchbar", sb)        ||
+           !config.Get("paste_output", paste_output))
+        {
+            std::cout << "Problems loading configuration file.\nSee --help." << std::endl;
+            return 1;
+        }
+    }
+
     while (true)
     {
+
         const auto opt = getopt_long(argc, argv, short_opts, long_opts, nullptr);
 
         if (-1 == opt)
@@ -111,6 +143,14 @@ int parse_arguments(const int argc, char* argv[])
 
             case 'o':
                 paste_output = std::string(optarg);
+                break;
+
+            case 160: // Style
+                paste_style = std::string(optarg);
+                break;
+
+            case 161: // Config
+                paste_config = std::string(optarg);
                 break;
 
             case 'h':

@@ -1,5 +1,7 @@
 #include <iostream>
 #include <iomanip>
+#include "compiler.h"
+
 using namespace std;
 
 void html_generate_tag(ostream& stream, string tag)
@@ -61,7 +63,7 @@ void html_generate_footer(ostream& stream)
 
 void html_generate_link(ostream& stream)
 {
-    stream << "<link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\">" << std::endl;
+    stream << "<link rel=\"stylesheet\" type=\"text/css\" href=\"" << paste_style << "\">" << std::endl;
 }
 
 void html_generate_script(ostream& stream)

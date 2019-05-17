@@ -6,8 +6,8 @@
 #include <iomanip>
 #include <algorithm>
 #include <dirent.h>
-#include "compiler.h"
-#include "configuration.h"
+#include "project/compiler.h"
+#include "project/configuration.h"
 
 Configuration config;
 std::string paste_config = ".paste";
@@ -34,7 +34,7 @@ void show_usage(const std::string& argv)
               << std::endl;
 }
 
-int paste_add(const std::string& filename)
+void paste_add(const std::string& filename)
 {
     auto time = std::time(nullptr);
     std::ofstream outfile ("posts/" + filename);
@@ -65,6 +65,7 @@ int paste_init()
     copy_paste("/usr/local/share/paste-light/themes/light.css", "style.css");
     copy_paste("/usr/local/share/paste-light/themes/js/index.js", "js/index.js");
     std::cout << "Project initialized\nSee --help for usage." << std::endl;
+    return 0;
 }
 
 int parse_arguments(const int argc, char* argv[])

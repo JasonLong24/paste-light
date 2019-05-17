@@ -2,7 +2,7 @@
 #include <string>
 #include <fstream>
 #include <iostream>
-#include "configuration.h"
+#include "project/configuration.h"
 
 using namespace std;
 

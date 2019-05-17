@@ -1,4 +1,6 @@
 test/
+build/
+paste-light
 *.out
 *.swp
 *.swo

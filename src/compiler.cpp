@@ -6,8 +6,8 @@
 #include <dirent.h>
 #include <vector>
 #include <iomanip>
-#include "compiler.h"
-#include "html_generator.h"
+#include "project/compiler.h"
+#include "project/html_generator.h"
 
 bool sb = false;
 

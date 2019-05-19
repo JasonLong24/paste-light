@@ -112,7 +112,7 @@ int parse_arguments(const int argc, char* argv[])
         if (-1 == opt)
             break;
 
-        if(!is_paste_init() && opt != 'i')
+        if(!is_paste_init() && opt != 'i' && opt != 'h')
         {
             std::cout << "Please initialize this project.\n See --help for usage." << std::endl;
             return 1;

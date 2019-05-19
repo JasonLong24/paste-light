@@ -145,6 +145,5 @@ int paste_compile()
 
     outfile.close();
     std::cout << "Compiled to " << paste_output << std::endl;
-    std::cout << paste_style << " " << paste_config << std::endl;
     return 0;
 }

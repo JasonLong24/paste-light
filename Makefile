@@ -50,7 +50,12 @@ all: $(BIN_PATH)/$(BIN_NAME)
 .PHONY: install
 install:
 	@echo "Installing $(BIN_NAME)"
-	@cp build/bin/$(BIN_NAME) ~
+	@cp -fv build/bin/$(BIN_NAME) /usr/bin/paste
+	@mkdir -p /usr/local/share/paste-light
+	@cp -r themes /usr/local/share/paste-light/themes
+	@cp -f README.md /usr/local/share/paste-light/README
+	@cp -f docs/paste-light /usr/local/man/man1/paste-light.1
+	@gzip /usr/local/man/man1/paste-light.1
 
 $(BIN_PATH)/$(BIN_NAME): $(OBJECTS)
 	@echo "Linking: $@"

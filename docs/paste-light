@@ -3,11 +3,57 @@
 .SH NAME
 paste-light \- lightweight paste manager for selfhosting.
 .SH SYNOPSIS
-paste [OPTION]...
+.B paste
+[\fIOPTIONS\fR]...
+[\fIFILE\fR]...
 .SH DESCRIPTION
 paste-light is a lightweight manager for raw snippets of code. paste-light will create a frontend interface that can be used to view your pastes anywhere. You can also push a new paste from anywhere using netcat. See NC(1).
 .SH OPTIONS
-The paste does not take any options.
+.TP
+.BR \-a ", " \-\-add
+Add a new entry to the posts directory and stage it for compiling.
+.TP
+.BR \-c ", " \-\-compile
+Compile the current project into a viewable website.
+.TP
+.BR \-\-config =\fIFILE\fR
+Path to the .paste config file. Default ./.paste
+.TP
+.BR \-i ", " \-\-init
+Initialize the current working directory with the paste-light files.
+.TP
+.BR \-o ", " \-\-out =\fIFILE\fR
+Path to the desired output of the html. Default ./index.html
+.TP
+.BR \-s ", " \-\-searchbar
+Display a searchbar.
+.TP
+.BR \-\-style =\fIFILE\fR
+Path to style sheet. Default ./style.css
+.TP
+.BR \-t ", " \-\-title =\fITITLE\fR
+Display a title. Default Pastebin
+.TP
+.BR \-h ", " \-\-help
+Display this help and exit.
+.SH EXAMPLES
+.SS Netcat Listener
+You can setup your server to listen for a push from a client with a new paste. To do this copy the paste-listener file; see FILES below; to the root of your project. Edit the script to your server specifications and run it.
+.SS Netcat Send
+Push from your local machine using the paste-send file; see FILES below. Edit the script to meet the specificaitons of your listener. Be sure to pass in the file you want to send to the server.
+.SH FILES
+.TP
+/usr/local/share/paste-light/themes/light.css
+Default light theme used for newly initialized paste.
+.TP
+/usr/local/share/paste-light/themes/js/index.js
+Default javascript used for the search functionality.; see OPTIONS above
+.TP
+/usr/local/share/paste-light/themes/server/paste-listener.js
+Listen for a paste push from a client. see EXAMPLES above
+.TP
+/usr/local/share/paste-light/themes/server/paste-send.js
+Send a paste to a listening server. see EXAMPLES above
 .SH SEE ALSO
 NC(8) and full documentation at <https://github.com/jsnal/paste-light/README.md>
 .SH BUGS

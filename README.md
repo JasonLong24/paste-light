@@ -1,36 +1,56 @@
 # paste-light
 
-lightweight paste system that supports pushing pastes from the terminal.
+lightweight paste system that is managed from the terminal.
 
 ### Install
 
 ```
-bash <(wget -qO- https://raw.githubusercontent.com/jsnal/paste-light/master/install.sh)
+$ git clone https://github.com/jsnal/paste-light
+$ make && sudo make install
 ```
 
 ### Usage
 
 ```
--init, --initialize         Initialize a new project.
--a, --add [NAME]            Create a new paste with filename.
--c, --compile               Compile the current project into a viewable website.
--t, --title [TITLE]         Title your website.
--l, --listen                Make current server a listner for potential pushes
--p, --port                  Set the current server port.
--h, --help                  Show this screen.
---search-bar [BOOLEAN]      Create a search bar for your website. Needs JS.
---send                      Send a paste to a listening server.
---host                      Set the current server ip address.
+-a, --add
+       Add a new entry to the posts directory and stage it for compiling.
+
+-c, --compile
+       Compile the current project into a viewable website.
+
+--config=FILE
+       Path to the .paste config file. Default ./.paste
+
+-i, --init
+       Initialize the current working directory with the paste-light files.
+
+-o, --out=FILE
+       Path to the desired output of the html. Default ./index.html
+
+-s, --searchbar
+       Display a searchbar.
+
+--style=FILE
+       Path to style sheet. Default ./style.css
+
+-t, --title=TITLE
+       Display a title. Default Pastebin
+
+-h, --help
+       Display this help and exit.
 ```
+
+See full help at `man paste-light`
 
 ### Uninstall
 
 ```
-bash <(wget -qO- https://raw.githubusercontent.com/jsnal/paste-light/master/install.sh) -r
+$ sudo make uninstall
 ```
 
 ### Update
 
 ```
-bash <(wget -qO- https://raw.githubusercontent.com/jsnal/paste-light/master/install.sh) -u
+$ git pull origin master
+$ make clean && make && sudo make install
 ```

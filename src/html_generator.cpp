@@ -70,3 +70,8 @@ void html_generate_script(ostream& stream)
 {
     stream << "<script charset='utf-8' src='js/index.js'></script>" << std::endl;
 }
+
+void html_generate_title(ostream& stream)
+{
+    stream << "<title>" << paste_title << "</title>" << std::endl;
+}

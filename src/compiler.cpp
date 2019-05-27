@@ -89,6 +89,7 @@ void compile_table_header(std::ostream& os)
 {
     html_generate_tag_start(os, "html");
     html_generate_tag_start(os, "header");
+    html_generate_title(os);
     html_generate_link(os);
     html_generate_script(os);
     html_generate_tag_end(os, "header");

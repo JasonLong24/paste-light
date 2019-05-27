@@ -9,3 +9,4 @@ void html_generate_tag_end(std::ostream&, std::string);
 void html_generate_footer(std::ostream&);
 void html_generate_link(std::ostream&);
 void html_generate_script(std::ostream&);
+void html_generate_title(std::ostream&);

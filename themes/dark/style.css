@@ -1,0 +1,68 @@
+body {
+  background-color: #111111;
+  font-weight: normal;
+}
+
+#paste-tbl-container, .paste-tbl-header, .paste-tbl-data {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+#paste-tbl-container {
+  width: 100%;
+}
+
+.paste-tbl-header, .paste-tbl-data {
+  text-align: left;
+}
+
+.paste-tbl-header {
+  text-decoration: underline;
+  background-color: #292934;
+  color: #93b9f3;
+}
+
+#paste-tbl-container {
+  background-color: #292934;
+  color: #7e7e8f;
+}
+
+#paste-title {
+  font-size: 20px;
+  color: #7e7e8f;
+  display: inline;
+  float: left;
+  padding-left: 5px;
+  padding-bottom: 5px;
+  margin: 0px;
+}
+
+#table-filter {
+  margin-bottom: 4px;
+  float: right;
+  background: #292934;
+  border: 0px;
+  color: #93b9f3;
+}
+
+#table-filter::placeholder {
+  color: #7e7e8f;
+  opacity: 1;
+}
+
+#paste-tbl-container a {
+  text-decoration: none;
+  color: #93b9f3;
+}
+
+#paste-tbl-container a:hover {
+  text-decoration: none;
+  background-color: #93b9f3;
+  color: #111111;
+}
+
+footer {
+  padding-top: 2px;
+  color: #7e7e8f;
+  text-align: center;
+}

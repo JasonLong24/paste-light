@@ -62,7 +62,7 @@ int paste_init()
     outfile << "paste_searchbar=false" << std::endl;
     outfile << "paste_title=Pastebin" << std::endl;
     outfile.close();
-    copy_paste("/usr/local/share/paste-light/themes/light.css", "style.css");
+    copy_paste("/usr/local/share/paste-light/themes/default.css", "style.css");
     copy_paste("/usr/local/share/paste-light/themes/js/index.js", "js/index.js");
     std::cout << "Project initialized\nSee --help for usage." << std::endl;
     return 0;

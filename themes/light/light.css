@@ -1,0 +1,41 @@
+#paste-tbl-container, .paste-tbl-header, .paste-tbl-data {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+#paste-tbl-container {
+  width: 100%;
+}
+
+.paste-tbl-header, .paste-tbl-data {
+  text-align: left;
+}
+
+.paste-tbl-header {
+  background-color: black;
+  color: white;
+}
+
+#paste-tbl-container tr:nth-child(even) {
+  background-color: #eee;
+}
+
+#paste-tbl-container tr:nth-child(odd) {
+  background-color: #fff;
+}
+
+#paste-title {
+  display: inline;
+  float: left;
+  margin: 0px;
+}
+
+#table-filter {
+  margin-bottom: 4px;
+  float: right;
+}
+
+footer {
+  padding-top: 2px;
+  text-align: center;
+}

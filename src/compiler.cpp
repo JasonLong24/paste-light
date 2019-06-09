@@ -10,6 +10,7 @@
 #include "project/html_generator.h"
 
 bool sb = false;
+bool paste_plain = false;
 
 int get_file_list(std::string dir, std::vector<std::string> &files)
 {
@@ -124,6 +125,20 @@ void compile_table(std::vector<std::string> files, std::ostream& os)
     html_generate_tag_end(os, "table");
 }
 
+void compile_plain_text(std::vector<std::string> files)
+{
+    std::ofstream outfile ("posts.lst");
+    outfile << paste_title << " Shell Interface\n" << std::endl;
+    for (unsigned int i = 0; i < files.size(); i++)
+    {
+        outfile << compile_get_id(files[i], "//*title=")
+                << " - "
+                << paste_host << "/build/"
+                << files[i] << ".paste"
+                << std::endl;
+    }
+}
+
 int paste_compile()
 {
     std::vector<std::string> files = std::vector<std::string>();
@@ -146,5 +161,11 @@ int paste_compile()
 
     outfile.close();
     std::cout << "Compiled to " << paste_output << std::endl;
+
+    if(paste_plain)
+    {
+        compile_plain_text(files);
+        std::cout << "Generating Plain Text File" << std::endl;
+    }
     return 0;
 }

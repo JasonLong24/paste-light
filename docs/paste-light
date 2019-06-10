@@ -36,10 +36,32 @@ Display a title. Default Pastebin
 .TP
 .BR \-h ", " \-\-help
 Display this help and exit.
+.SH CONFIGURATION
+A configuration file can be found in the root of your paste directory called .paste
+.TP
+.BR paste_style
+Path to your stylesheet.
+.TP
+.BR paste_host
+The hostname of where you will be displaying the website. Needed for plain text implementation.
+.TP
+.BR paste_output
+Path to the output of the index.html generated.
+.TP
+.BR paste_searchbar
+Boolean value for if the searchbar should be displayed or not.
+.TP
+.BR paste_title
+The title of your paste site.
+.TP
+.BR paste_plain
+Boolean value for if paste-light should generate a plain text file with all of your posts.
 .SH EXAMPLES
-.SS Netcat Listener
+.TP
+.BR "Netcat Listener"
 You can setup your server to listen for a push from a client with a new paste. To do this copy the paste-listener file; see FILES below; to the root of your project. Edit the script to your server specifications and run it.
-.SS Netcat Send
+.TP
+.BR "Netcat Send"
 Push from your local machine using the paste-send file; see FILES below. Edit the script to meet the specificaitons of your listener. Be sure to pass in the file you want to send to the server.
 .SH FILES
 .TP
@@ -49,10 +71,10 @@ Default light theme used for newly initialized paste.
 /usr/local/share/paste-light/themes/js/index.js
 Default javascript used for the search functionality.; see OPTIONS above
 .TP
-/usr/local/share/paste-light/themes/server/paste-listener.js
+/usr/local/share/paste-light/themes/server/paste-listener.sh
 Listen for a paste push from a client. see EXAMPLES above
 .TP
-/usr/local/share/paste-light/themes/server/paste-send.js
+/usr/local/share/paste-light/themes/server/paste-send.sh
 Send a paste to a listening server. see EXAMPLES above
 .SH SEE ALSO
 NC(8) and full documentation at <https://github.com/jsnal/paste-light/README.md>

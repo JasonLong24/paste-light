@@ -58,7 +58,13 @@ void html_generate_tag_end(ostream& stream, string tag)
 void html_generate_footer(ostream& stream)
 {
     auto time = std::time(nullptr);
-    stream << "<footer>Last Updated: " << std::put_time(std::gmtime(&time), "%D") << "</footer>" << std::endl;
+    if(!paste_plain) {
+      stream << "<footer>Last Updated: " << std::put_time(std::gmtime(&time), "%D") << "</footer>" << std::endl;
+    } else {
+      stream << "<footer>Last Updated: " << std::put_time(std::gmtime(&time), "%D")
+             << " - <a href=\"posts.lst\">Shell</a>"
+             << "</footer>" << std::endl;
+    }
 }
 
 void html_generate_link(ostream& stream)

@@ -128,7 +128,10 @@ void compile_table(std::vector<std::string> files, std::ostream& os)
 void compile_plain_text(std::vector<std::string> files)
 {
     std::ofstream outfile ("posts.lst");
-    outfile << paste_title << " Shell Interface\n" << std::endl;
+    outfile << paste_title << " Shell Interface\n\n"
+            << "wget -qO- " << paste_host << "/posts.lst | sed 1,5d | grep -i \"command\"\n"
+            << "curl -L "   << paste_host << "/posts.lst | sed 1,5d | grep -i \"command\"\n"
+            << std::endl;
     for (unsigned int i = 0; i < files.size(); i++)
     {
         outfile << compile_get_id(files[i], "//*title=")

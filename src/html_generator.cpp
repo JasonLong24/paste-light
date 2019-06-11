@@ -62,7 +62,7 @@ void html_generate_footer(ostream& stream)
       stream << "<footer>Last Updated: " << std::put_time(std::gmtime(&time), "%D") << "</footer>" << std::endl;
     } else {
       stream << "<footer>Last Updated: " << std::put_time(std::gmtime(&time), "%D")
-             << " - <a href=\"posts.lst\">Shell</a>"
+             << " - <a href=\"" << paste_footerlink << "\">Shell</a>"
              << "</footer>" << std::endl;
     }
 }

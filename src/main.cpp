@@ -12,6 +12,8 @@
 Configuration config;
 std::string paste_config = ".paste";
 std::string paste_plain_output = "txt";
+std::string paste_footerlink = "posts.lst";
+std::string paste_post;
 std::string paste_host;
 std::string paste_title;
 std::string paste_output;
@@ -65,6 +67,9 @@ int paste_init()
     outfile << "paste_searchbar=false" << std::endl;
     outfile << "paste_title=Pastebin" << std::endl;
     outfile << "paste_plain=false" << std::endl;
+    outfile << "paste_plain_output=txt" << std::endl;
+    outfile << "paste_post=nothing" << std::endl;
+    outfile << "paste_footerlink=posts.lst" << std::endl;
     outfile.close();
     copy_paste("/usr/local/share/paste-light/themes/default.css", "style.css");
     copy_paste("/usr/local/share/paste-light/themes/js/index.js", "js/index.js");
@@ -104,6 +109,8 @@ int parse_arguments(const int argc, char* argv[])
            !config.Get("paste_plain", paste_plain)               ||
            !config.Get("paste_plain_output", paste_plain_output) ||
            !config.Get("paste_host", paste_host)                 ||
+           !config.Get("paste_post", paste_post)                 ||
+           !config.Get("paste_footerlink", paste_footerlink)     ||
            !config.Get("paste_output", paste_output))
         {
             std::cout << "Problems loading configuration file.\nSee --help." << std::endl;

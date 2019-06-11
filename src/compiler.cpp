@@ -144,12 +144,12 @@ void generate_markdown_text(std::vector<std::string> files)
 {
     std::ofstream outfile ("posts.md");
     outfile << "# " << paste_title << " Shell Interface\n\n"
-            << "```\n" << "wget -qO- " << paste_host << "/posts.lst | sed 1,5d | grep -i \"command\"\n"
-            << "curl -L "   << paste_host << "/posts.lst | sed 1,5d | grep -i \"command\"\n" << "```"
+            << "```\n" << "wget -qO- " << paste_host << "/posts.md | sed 1,5d | grep -i \"command\"\n"
+            << "curl -L "   << paste_host << "/posts.md | sed 1,5d | grep -i \"command\"\n" << "```"
             << std::endl;
     for (unsigned int i = 0; i < files.size(); i++)
     {
-        outfile << "[" << compile_get_id(files[i], "//*title=") << "]"
+        outfile << "* [" << compile_get_id(files[i], "//*title=") << "]"
                 << "(" << paste_host << "/build/"
                 << files[i] << ".paste" << ")" << std::endl;
     }
@@ -194,6 +194,10 @@ int paste_compile()
     {
         compile_plain_text(files);
         std::cout << "Generating Plain Text File" << std::endl;
+    }
+
+    if(paste_post != "nothing") {
+        system(paste_post.c_str());
     }
     return 0;
 }

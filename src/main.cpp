@@ -11,6 +11,7 @@
 
 Configuration config;
 std::string paste_config = ".paste";
+std::string paste_plain_output = "txt";
 std::string paste_host;
 std::string paste_title;
 std::string paste_output;
@@ -97,11 +98,12 @@ int parse_arguments(const int argc, char* argv[])
     {
         config.Load(paste_config);
 
-        if(!config.Get("paste_style", paste_style)   ||
-           !config.Get("paste_title", paste_title)   ||
-           !config.Get("paste_searchbar", sb)        ||
-           !config.Get("paste_plain", paste_plain)   ||
-           !config.Get("paste_host", paste_host)     ||
+        if(!config.Get("paste_style", paste_style)               ||
+           !config.Get("paste_title", paste_title)               ||
+           !config.Get("paste_searchbar", sb)                    ||
+           !config.Get("paste_plain", paste_plain)               ||
+           !config.Get("paste_plain_output", paste_plain_output) ||
+           !config.Get("paste_host", paste_host)                 ||
            !config.Get("paste_output", paste_output))
         {
             std::cout << "Problems loading configuration file.\nSee --help." << std::endl;

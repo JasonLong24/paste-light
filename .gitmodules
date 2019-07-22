@@ -1,0 +1,3 @@
+[submodule "libs/maddy"]
+	path = libs/maddy
+	url = https://github.com/progsource/maddy

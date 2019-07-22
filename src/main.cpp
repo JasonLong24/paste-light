@@ -6,8 +6,11 @@
 #include <iomanip>
 #include <algorithm>
 #include <dirent.h>
+#include <memory>
+#include <string>
 #include "project/compiler.h"
 #include "project/configuration.h"
+#include "maddy/parser.h"
 
 Configuration config;
 std::string paste_config = ".paste";

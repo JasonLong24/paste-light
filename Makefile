@@ -17,7 +17,7 @@ DEPS = $(OBJECTS:.o=.d)
 
 COMPILE_FLAGS = -std=c++11 -Wall -Wextra -g
 INCLUDES = -I include/ -I /usr/local/include
-LIBS =
+LIBS = -I libs/maddy/include
 
 .PHONY: default_target
 default_target: release
@@ -73,4 +73,4 @@ $(BIN_PATH)/$(BIN_NAME): $(OBJECTS)
 
 $(BUILD_PATH)/%.o: $(SRC_PATH)/%.$(SRC_EXT)
 	@echo "Compiling: $< -> $@"
-	$(CXX) $(CXXFLAGS) $(INCLUDES) -MP -MMD -c $< -o $@
+	$(CXX) $(CXXFLAGS) $(INCLUDES) $(LIBS) -MP -MMD -c $< -o $@

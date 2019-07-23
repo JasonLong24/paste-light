@@ -66,3 +66,55 @@ footer {
   color: #7e7e8f;
   text-align: center;
 }
+
+#raw-body {
+  margin: 50px 300px;
+}
+
+#raw-body > h1,
+#raw-body > h2,
+#raw-body > h3,
+#raw-body > h4,
+#raw-body > h5,
+#raw-body > h6,
+#raw-body > p  {
+  color: #7e7e8f;
+}
+
+#raw-body > ul, #raw-body > ul > li {
+  color: #7e7e8f;
+}
+
+#raw-body > ol, #raw-body > ol > li {
+  color: #7e7e8f;
+}
+
+#raw-body > hr {
+  color: #444267
+}
+
+#raw-body a {
+  color: #97bef9;
+  text-decoration: none;
+}
+
+#raw-body a:hover {
+  color: #5982c1;
+  text-decoration: none;
+}
+
+pre {
+  background: #292934;
+  color: #72d3a9;
+  border-radius: 5px;
+  border: 1px solid #444267;
+  padding: 2px 4px;
+}
+
+p > code {
+  background-color: #292934;
+  color: #72d3a9;
+  border-radius: 5px;
+  /* border: 1px solid #444267; */
+  padding: 2px 4px;
+}

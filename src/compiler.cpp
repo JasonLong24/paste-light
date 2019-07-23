@@ -83,7 +83,7 @@ void compile_table_header(std::ostream& os)
     html_generate_tag_class(os, "th", "Date", "paste-tbl-header");
     html_generate_tag_class(os, "th", "Filetype", "paste-tbl-header");
     html_generate_tag_class(os, "th", "View", "paste-tbl-header");
-    html_generate_tag_class(os, "th", "Get", "paste-tbl-header");
+    html_generate_tag_class(os, "th", "Raw", "paste-tbl-header");
     html_generate_tag_end(os, "tr");
 }
 
@@ -102,8 +102,8 @@ void compile_table(std::vector<std::string> files, std::ostream& os)
         compile_table_row(os, compile_get_id(files[i], "//*title="));
         compile_table_row(os, compile_get_id(files[i], "//*date="));
         compile_table_row(os, compile_get_id(files[i], "//*filetype="));
-        compile_table_row(os, "<a href=\"build/" + files[i] + ".html\">VIEW</a>");
-        compile_table_row(os, "<a href=\"build/" + files[i] + ".paste\">GET</a>");
+        compile_table_row(os, "<a href=\"build/view/" + files[i] + ".html\">VIEW</a>");
+        compile_table_row(os, "<a href=\"build/raw/" + files[i] + ".paste\">RAW</a>");
         html_generate_tag_end(os, "tr");
     }
 

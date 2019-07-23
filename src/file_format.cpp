@@ -5,14 +5,23 @@
 #include "project/html_generator.h"
 #include "maddy/parser.h"
 
+void copy(const std::string& source, const std::string& destination)
+{
+    std::ifstream src(source, std::ios::binary);
+    std::ofstream dst(destination,   std::ios::binary);
+    dst << src.rdbuf();
+}
+
 /*
  * Called after format file, converts md to html
  */
 void generate_html_view(const std::string& file)
 {
+  mkdir("build/view/", 0777);
+  copy(paste_style, "build/view/style.css");
 
   // grab the file contents
-  std::ifstream ifs("build/"+file+".paste");
+  std::ifstream ifs("build/raw/"+file+".paste");
   std::string content( (std::istreambuf_iterator<char>(ifs) ),
                        (std::istreambuf_iterator<char>()    ) );
 
@@ -22,18 +31,20 @@ void generate_html_view(const std::string& file)
   std::string htmlOutput = parser->Parse(markdownInput);
 
   // put it into an html file
-  std::ofstream outfile ("build/"+file+".html");
-  html_generate_link(outfile);
+  std::ofstream outfile ("build/view/"+file+".html");
+  outfile << "<link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\">" << std::endl;
+  outfile << "<body id=\"raw-body\">" << std::endl;
   outfile << htmlOutput << std::endl;
+  outfile << "</body>" << std::endl;
   outfile.close();
 }
 
 void format_file(const std::string& file)
 {
-    mkdir("build", 0777);
+    mkdir("build/raw/", 0777);
     std::istringstream f(get_file(file));
     std::string cline;
-    std::ofstream outfile ("build/" + file + ".paste");
+    std::ofstream outfile ("build/raw/" + file + ".paste");
     int i = 0;
 
     while(std::getline(f, cline))

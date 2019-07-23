@@ -1,5 +1,7 @@
 int paste_compile();
 void paste_searchbar();
+std::string get_file(std::string file);
+std::string compile_get_id(std::string file, std::string id);
 
 extern std::string paste_title;
 extern std::string paste_output;

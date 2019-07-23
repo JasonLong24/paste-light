@@ -6,8 +6,12 @@
 #include <dirent.h>
 #include <vector>
 #include <iomanip>
+#include <memory>
+#include <string>
 #include "project/compiler.h"
 #include "project/html_generator.h"
+#include "project/file_format.h"
+#include "maddy/parser.h"
 
 bool sb = false;
 bool paste_plain = false;
@@ -65,27 +69,6 @@ std::string compile_get_id(std::string file, std::string id)
     return	cline.erase(0, id.length());
 }
 
-void format_file(const std::string& file)
-{
-    mkdir("build", 0777);
-    std::istringstream f(get_file(file));
-    std::string cline;
-    std::ofstream outfile ("build/" + file + ".paste");
-    int i = 0;
-
-    while(std::getline(f, cline))
-    {
-        i++;
-
-        if (i > 3)
-        {
-            outfile << cline << std::endl;
-        }
-    }
-
-    outfile.close();
-}
-
 void compile_table_header(std::ostream& os)
 {
     html_generate_tag_start(os, "html");
@@ -100,6 +83,7 @@ void compile_table_header(std::ostream& os)
     html_generate_tag_class(os, "th", "Date", "paste-tbl-header");
     html_generate_tag_class(os, "th", "Filetype", "paste-tbl-header");
     html_generate_tag_class(os, "th", "View", "paste-tbl-header");
+    html_generate_tag_class(os, "th", "Get", "paste-tbl-header");
     html_generate_tag_end(os, "tr");
 }
 
@@ -118,53 +102,12 @@ void compile_table(std::vector<std::string> files, std::ostream& os)
         compile_table_row(os, compile_get_id(files[i], "//*title="));
         compile_table_row(os, compile_get_id(files[i], "//*date="));
         compile_table_row(os, compile_get_id(files[i], "//*filetype="));
+        compile_table_row(os, "<a href=\"build/" + files[i] + ".html\">VIEW</a>");
         compile_table_row(os, "<a href=\"build/" + files[i] + ".paste\">GET</a>");
         html_generate_tag_end(os, "tr");
     }
 
     html_generate_tag_end(os, "table");
-}
-
-void generate_plain_text(std::vector<std::string> files)
-{
-    std::ofstream outfile ("posts.lst");
-    outfile << paste_title << " Shell Interface\n\n"
-            << "wget -qO- " << paste_host << "/posts.lst | sed 1,5d | grep -i \"command\"\n"
-            << "curl -L "   << paste_host << "/posts.lst | sed 1,5d | grep -i \"command\"\n"
-            << std::endl;
-    for (unsigned int i = 0; i < files.size(); i++)
-    {
-        outfile << compile_get_id(files[i], "//*title=") << " - "
-                << paste_host << "/build/"
-                << files[i] << ".paste" << std::endl;
-    }
-}
-
-void generate_markdown_text(std::vector<std::string> files)
-{
-    std::ofstream outfile ("posts.md");
-    outfile << "# " << paste_title << " Shell Interface\n\n"
-            << "```\n" << "wget -qO- " << paste_host << "/posts.md | sed 1,5d | grep -i \"command\"\n"
-            << "curl -L "   << paste_host << "/posts.md | sed 1,5d | grep -i \"command\"\n" << "```"
-            << std::endl;
-    for (unsigned int i = 0; i < files.size(); i++)
-    {
-        outfile << "* [" << compile_get_id(files[i], "//*title=") << "]"
-                << "(" << paste_host << "/build/"
-                << files[i] << ".paste" << ")" << std::endl;
-    }
-}
-
-void compile_plain_text(std::vector<std::string> files)
-{
-    if(paste_plain_output == "txt" || paste_plain_output == "text") {
-          generate_plain_text(files);
-    } else if(paste_plain_output == "md" || paste_plain_output == "markdown") {
-          generate_markdown_text(files);
-    } else if(paste_plain_output == "both") {
-          generate_plain_text(files);
-          generate_markdown_text(files);
-    }
 }
 
 int paste_compile()

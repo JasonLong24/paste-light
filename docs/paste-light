@@ -56,6 +56,9 @@ The title of your paste site.
 .TP
 .BR paste_plain
 Boolean value for if paste-light should generate a plain text file with all of your posts.
+.TP
+.BR paste_html_view
+Boolean value for if you would like paste-light to try to compile your posts from markdown into html.
 .SH EXAMPLES
 .TP
 .BR "Netcat Listener"
@@ -69,7 +72,7 @@ Push from your local machine using the paste-send file; see FILES below. Edit th
 Default light theme used for newly initialized paste.
 .TP
 /usr/local/share/paste-light/themes/js/index.js
-Default javascript used for the search functionality.; see OPTIONS above
+Default javascript used for the search functionality. see OPTIONS above
 .TP
 /usr/local/share/paste-light/themes/server/paste-listener.sh
 Listen for a paste push from a client. see EXAMPLES above

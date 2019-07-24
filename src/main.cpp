@@ -78,6 +78,8 @@ int paste_init()
     return 0;
 }
 
+bool paste_compile_flag = false;
+
 int parse_arguments(const int argc, char* argv[])
 {
     if (argc < 2)
@@ -136,10 +138,8 @@ int parse_arguments(const int argc, char* argv[])
 
         switch (opt)
         {
-
-            // TODO: Make paste_compile always execute last instead of the first time it appears.
             case 'c':
-                paste_compile();
+                paste_compile_flag = true;
                 break;
 
             case 'a':
@@ -177,6 +177,9 @@ int parse_arguments(const int argc, char* argv[])
                 break;
         }
     }
+
+    // Be sure paste_compile() runs last.
+    if (paste_compile_flag) paste_compile();
 
     return 0;
 }

@@ -13,3 +13,4 @@ extern std::string paste_post;
 extern std::string paste_footerlink;
 extern bool sb;
 extern bool paste_plain;
+extern bool paste_html_view;

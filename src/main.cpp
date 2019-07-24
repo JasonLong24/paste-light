@@ -70,6 +70,7 @@ int paste_init()
     outfile << "paste_plain_output=txt" << std::endl;
     outfile << "paste_post=nothing" << std::endl;
     outfile << "paste_footerlink=posts.lst" << std::endl;
+    outfile << "paste_html_view=true" << std::endl;
     outfile.close();
     copy_paste("/usr/local/share/paste-light/themes/default.css", "style.css");
     copy_paste("/usr/local/share/paste-light/themes/js/index.js", "js/index.js");
@@ -111,6 +112,7 @@ int parse_arguments(const int argc, char* argv[])
            !config.Get("paste_host", paste_host)                 ||
            !config.Get("paste_post", paste_post)                 ||
            !config.Get("paste_footerlink", paste_footerlink)     ||
+           !config.Get("paste_html_view", paste_html_view)       ||
            !config.Get("paste_output", paste_output))
         {
             std::cout << "Problems loading configuration file.\nSee --help." << std::endl;

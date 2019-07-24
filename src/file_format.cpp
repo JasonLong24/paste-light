@@ -41,16 +41,17 @@ void generate_html_view(const std::string& file)
 
 void format_file(const std::string& file)
 {
+    mkdir("build/", 0777);
     mkdir("build/raw/", 0777);
+
     std::istringstream f(get_file(file));
     std::string cline;
     std::ofstream outfile ("build/raw/" + file + ".paste");
-    int i = 0;
 
+    int i = 0;
     while(std::getline(f, cline))
     {
         i++;
-
         if (i > 3)
         {
             outfile << cline << std::endl;
@@ -59,7 +60,7 @@ void format_file(const std::string& file)
 
     outfile.close();
 
-    generate_html_view(file);
+    if(paste_html_view) generate_html_view(file);
 }
 
 void generate_plain_text(std::vector<std::string> files)

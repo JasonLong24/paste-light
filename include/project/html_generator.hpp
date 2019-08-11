@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include <iomanip>
-#include "project/compiler.h"
+#include "project/compiler.hpp"
 
 void html_generate_tag(std::ostream&, std::string);
 void html_generate_tag(std::ostream&, std::string, std::string);

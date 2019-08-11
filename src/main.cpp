@@ -6,8 +6,8 @@
 #include <iomanip>
 #include <algorithm>
 #include <dirent.h>
-#include "project/compiler.h"
-#include "project/configuration.h"
+#include "project/compiler.hpp"
+#include "project/configuration.hpp"
 
 Configuration config;
 std::string paste_config = ".paste";

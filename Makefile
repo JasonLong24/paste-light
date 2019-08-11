@@ -67,8 +67,8 @@ install:
 	@cp -f docs/paste-light /usr/local/man/man1/paste-light.1
 	@gzip /usr/local/man/man1/paste-light.1
 
-.PHONY: test
-test:
+.PHONY: tests
+tests:
 	@echo "Building tests"
 	$(CXX) $(INCLUDES) $(TEST_LIBS) tests/test_paste_light.cpp -o tests/test_paste_light
 

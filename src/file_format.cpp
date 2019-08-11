@@ -1,8 +1,8 @@
 #include <iostream>
 #include <sys/stat.h>
 #include <fstream>
-#include "project/compiler.h"
-#include "project/html_generator.h"
+#include "project/compiler.hpp"
+#include "project/html_generator.hpp"
 #include "maddy/parser.h"
 
 void copy(const std::string& source, const std::string& destination)

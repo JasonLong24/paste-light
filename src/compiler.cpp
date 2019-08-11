@@ -8,9 +8,9 @@
 #include <iomanip>
 #include <memory>
 #include <string>
-#include "project/compiler.h"
-#include "project/html_generator.h"
-#include "project/file_format.h"
+#include "project/compiler.hpp"
+#include "project/html_generator.hpp"
+#include "project/file_format.hpp"
 #include "maddy/parser.h"
 
 bool sb = false;

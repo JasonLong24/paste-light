@@ -1,0 +1,21 @@
+sudo: required
+
+before_install:
+  - git submodule init
+  - git submodule update
+
+language: cpp
+
+compiler: gcc
+
+jobs:
+  include:
+    - stage: "Build"
+      name: "Build paste-light"
+      script: make
+    - stage: "Build tests"
+      name: "Build paste-light tests"
+      script: make tests
+    - stage: "Tests"
+      name: "Run tests"
+      script: cd tests && ./test_paste_light

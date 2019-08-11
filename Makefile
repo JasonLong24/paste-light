@@ -70,7 +70,7 @@ install:
 .PHONY: tests
 tests:
 	@echo "Building tests"
-	$(CXX) $(INCLUDES) $(TEST_LIBS) tests/test_paste_light.cpp -o tests/test_paste_light
+	$(CXX) $(COMPILE_FLAGS) $(INCLUDES) $(TEST_LIBS) tests/test_paste_light.cpp -o tests/test_paste_light
 
 $(BIN_PATH)/$(BIN_NAME): $(OBJECTS)
 	@echo "Linking: $@"

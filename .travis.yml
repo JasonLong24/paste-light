@@ -16,12 +16,10 @@ jobs:
     - stage: "Build"
       name: "Build paste-light"
       script: make
-    - stage: "Install"
       name: "Build and Install paste-light"
       script: make && sudo make install
-    - stage: "Build tests"
+    - stage: "Test"
       name: "Build paste-light tests"
       script: make tests
-    - stage: "Tests"
-      name: "Run tests"
+      name: "Run paste-light tests"
       script: cd tests && ./test_paste_light

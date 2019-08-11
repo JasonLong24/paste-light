@@ -1,3 +1,6 @@
 [submodule "libs/maddy"]
 	path = libs/maddy
 	url = https://github.com/progsource/maddy
+[submodule "libs/doctest"]
+	path = libs/doctest
+	url = https://github.com/onqtam/doctest

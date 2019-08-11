@@ -1,3 +1,10 @@
+#ifndef PROJECT_HTMLGENERATOR_HPP
+#define PROJECT_HTMLGENERATOR_HPP
+
+#include <iostream>
+#include <iomanip>
+#include "project/compiler.h"
+
 void html_generate_tag(std::ostream&, std::string);
 void html_generate_tag(std::ostream&, std::string, std::string);
 void html_generate_tag_class(std::ostream&, std::string, std::string, std::string);
@@ -10,3 +17,7 @@ void html_generate_footer(std::ostream&);
 void html_generate_link(std::ostream&);
 void html_generate_script(std::ostream&);
 void html_generate_title(std::ostream&);
+
+extern int some_test_function();
+
+#endif

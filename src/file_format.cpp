@@ -95,11 +95,11 @@ void generate_markdown_text(std::vector<std::string> files)
 
 void compile_plain_text(std::vector<std::string> files)
 {
-    if(paste_plain_output == "txt" || paste_plain_output == "text") {
+    if (paste_plain_output == "txt" || paste_plain_output == "text") {
           generate_plain_text(files);
-    } else if(paste_plain_output == "md" || paste_plain_output == "markdown") {
+    } else if (paste_plain_output == "md" || paste_plain_output == "markdown") {
           generate_markdown_text(files);
-    } else if(paste_plain_output == "both") {
+    } else if (paste_plain_output == "both") {
           generate_plain_text(files);
           generate_markdown_text(files);
     }

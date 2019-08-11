@@ -19,6 +19,8 @@ COMPILE_FLAGS = -std=c++11 -Wall -Wextra -g
 INCLUDES = -I include/ -I /usr/local/include
 LIBS = -I libs/maddy/include
 
+TEST_LIBS = -I libs/maddy/include -I libs/doctest/doctest
+
 .PHONY: default_target
 default_target: release
 
@@ -64,6 +66,11 @@ install:
 	@cp -f README.md /usr/local/share/paste-light/README
 	@cp -f docs/paste-light /usr/local/man/man1/paste-light.1
 	@gzip /usr/local/man/man1/paste-light.1
+
+.PHONY: test
+test:
+	@echo "Building tests"
+	$(CXX) $(INCLUDES) $(TEST_LIBS) tests/test_paste_light.cpp -o tests/test_paste_light
 
 $(BIN_PATH)/$(BIN_NAME): $(OBJECTS)
 	@echo "Linking: $@"

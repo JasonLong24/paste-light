@@ -9,11 +9,6 @@ pipeline {
         sh 'make -j'
       }
     }
-    stage('Install') {
-      steps {
-        sh 'make install'
-      }
-    }
     stage('Test') {
       steps {
         sh 'make tests'

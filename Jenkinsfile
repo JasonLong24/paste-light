@@ -12,7 +12,7 @@ pipeline {
     stage('Test') {
       steps {
         sh 'make tests'
-        sh 'cd tests && ./tests/test_paste_light'
+        sh 'cd tests && ./test_paste_light'
       }
     }
   }

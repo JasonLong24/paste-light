@@ -6,7 +6,7 @@ pipeline {
     stage('Build') {
       steps {
         sh 'gcc --version'
-        sh 'make -j'
+        sh 'make clean && make -j'
       }
     }
     stage('Test') {

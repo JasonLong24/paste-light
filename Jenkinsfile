@@ -11,7 +11,7 @@ pipeline {
     }
     stage('Install') {
       steps {
-        sh 'make install'
+        sh 'sudo make install'
       }
     }
     stage('Test') {

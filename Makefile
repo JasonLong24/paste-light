@@ -52,14 +52,14 @@ all: $(BIN_PATH)/$(BIN_NAME)
 .PHONY: uninstall
 uninstall:
 	@echo "Uninstalling $(BIN_NAME)"
-	@rm /usr/bin/paste
+	@rm /usr/bin/paste-light
 	@rm /usr/local/man/man1/paste-light.1.gz
 	@rm -rf /usr/local/share/paste-light
 
 .PHONY: install
 install:
 	@echo "Installing $(BIN_NAME)"
-	@cp -fv build/bin/$(BIN_NAME) /usr/bin/paste
+	@cp -fv build/bin/$(BIN_NAME) /usr/bin/paste-light
 	@mkdir -p /usr/local/share/paste-light
 	@cp -r themes /usr/local/share/paste-light/themes
 	@cp -r server /usr/local/share/paste-light/server

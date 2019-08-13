@@ -3,10 +3,16 @@ pipeline {
     docker { image 'gcc:8.3' }
   }
   stages {
+    stage('clean') {
+      steps {
+        sh 'gcc --version'
+        sh 'make clean'
+      }
+    }
     stage('Build') {
       steps {
         sh 'gcc --version'
-        sh 'make clean && make -j'
+        sh 'make -j'
       }
     }
     stage('Test') {

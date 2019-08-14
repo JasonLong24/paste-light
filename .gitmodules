@@ -4,3 +4,6 @@
 [submodule "libs/doctest"]
 	path = libs/doctest
 	url = https://github.com/onqtam/doctest
+[submodule "libs/CTML"]
+	path = libs/CTML
+	url = https://github.com/tinfoilboy/CTML

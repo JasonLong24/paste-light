@@ -8,6 +8,7 @@
 #include <iomanip>
 #include <memory>
 #include <string>
+#include "ctml.hpp"
 #include "project/compiler.hpp"
 #include "project/html_generator.hpp"
 #include "project/file_format.hpp"
@@ -70,45 +71,50 @@ std::string compile_get_id(std::string file, std::string id)
     return	cline.erase(0, id.length());
 }
 
-void compile_table_header(std::ostream& os)
+void compile_table_header(CTML::Node& node_table_container)
 {
-    html_generate_tag_start(os, "html");
-    html_generate_tag_start(os, "header");
-    html_generate_title(os);
-    html_generate_link(os);
-    html_generate_script(os);
-    html_generate_tag_end(os, "header");
-    html_generate_tag_start_id(os, "table", "paste-tbl-container");
-    html_generate_tag_start_class(os, "tr", "paste-tbl-row");
-    html_generate_tag_class(os, "th", "Name", "paste-tbl-header");
-    html_generate_tag_class(os, "th", "Date", "paste-tbl-header");
-    html_generate_tag_class(os, "th", "Filetype", "paste-tbl-header");
-    if(paste_html_view) html_generate_tag_class(os, "th", "View", "paste-tbl-header");
-    html_generate_tag_class(os, "th", "Raw", "paste-tbl-header");
-    html_generate_tag_end(os, "tr");
+    CTML::Node node_table_row("tr#paste-tbl-row");
+
+    // Append the table rows to the table container
+    node_table_row.AppendChild(CTML::Node("th.paste-tbl-header", "Name"))
+                  .AppendChild(CTML::Node("th.paste-tbl-header", "Date"))
+                  .AppendChild(CTML::Node("th.paste-tbl-header", "Filetype"));
+
+    if (paste_html_view)
+      node_table_row.AppendChild(CTML::Node("th.paste-tbl-header", "View"));
+
+    node_table_container.AppendChild(node_table_row);
 }
 
-void compile_table_row(std::ostream& os, const std::string& value)
-{
-    html_generate_tag_class(os, "td", value, "paste-tbl-data");
-}
-
-void compile_table(std::vector<std::string> files, std::ostream& os)
+void compile_table(std::vector<std::string> files, CTML::Node& node_table_container)
 {
     for (unsigned int i = 0; i < files.size(); i++)
     {
         std::cout << "Found -> posts/" << files[i] << std::endl;
         format_file(files[i]);
-        html_generate_tag_start_class(os, "tr", "paste-tbl-row");
-        compile_table_row(os, compile_get_id(files[i], "//*title="));
-        compile_table_row(os, compile_get_id(files[i], "//*date="));
-        compile_table_row(os, compile_get_id(files[i], "//*filetype="));
-        if(paste_html_view) compile_table_row(os, "<a href=\"build/view/" + files[i] + ".html\">VIEW</a>");
-        compile_table_row(os, "<a href=\"build/raw/" + files[i] + ".paste\">RAW</a>");
-        html_generate_tag_end(os, "tr");
-    }
+        CTML::Node node_table_row("tr.paste-tbl-row");
 
-    html_generate_tag_end(os, "table");
+        // Append all of the default table data cells
+        node_table_row.AppendChild(CTML::Node("td.paste-tbl-data",
+                                   compile_get_id(files[i], "//*title=")))
+
+                      .AppendChild(CTML::Node("td.paste-tbl-data",
+                                   compile_get_id(files[i], "//*date=")))
+
+                      .AppendChild(CTML::Node("td.paste-tbl-data",
+                                   compile_get_id(files[i], "//*filetype=")))
+
+                      .AppendChild(CTML::Node("td.paste-tbl-data",
+                                   CTML::Node("a", "RAW")
+                                             .SetAttribute("href", "build/raw/"+files[i]+".paste")));
+
+        /* if (paste_html_view) */
+        /*     node_table_row.AppendChild(CTML::Node("td.paste-tbl-data"), */
+        /*                                CTML::Node("a", "VIEW") */
+        /*                                          .SetAttribute("href", "build/view/"+files[i]+".html")); */
+
+        node_table_container.AppendChild(node_table_row);
+    }
 }
 
 int paste_compile()
@@ -116,21 +122,37 @@ int paste_compile()
     std::vector<std::string> files = std::vector<std::string>();
     get_file_list("posts", files);
 
+    CTML::Document document;
     std::ofstream outfile (paste_output);
+
+    document.AppendNodeToHead(CTML::Node("link").SetAttribute("rel", "stylesheet")
+                                                .SetAttribute("type", "text/css")
+                                                .SetAttribute("href", paste_style)
+                                                .UseClosingTag(false));
+
+    document.AppendNodeToHead(CTML::Node("script").SetAttribute("charset", "utf-8")
+                                                  .SetAttribute("src", "js/index.js"));
+
+    document.AppendNodeToBody(CTML::Node("p#paste-title", paste_title));
+    CTML::Node node_table_container("table#paste-tbl-container");
 
     if(sb)
     {
         std::cout << "Generating Searchbar" << std::endl;
-        outfile   << "<input type='text' id='table-filter' onkeyup='filter()' placeholder='Search Posts'>" << std::endl;
+        document.AppendNodeToBody(CTML::Node("input").SetAttribute("placeholder", "Search Posts")
+                                                     .SetAttribute("type",        "text")
+                                                     .SetAttribute("id",          "table-filter")
+                                                     .SetAttribute("onkeyup",     "filter()")
+                                                     .UseClosingTag(false));
     }
 
-    html_generate_tag_id(outfile, "p", paste_title, "paste-title");
     std::cout << "Generating Table" << std::endl;
-    compile_table_header(outfile);
-    compile_table(files, outfile);
+    compile_table_header(node_table_container);
+    compile_table(files, node_table_container);
+    document.AppendNodeToBody(node_table_container);
 
-    html_generate_footer(outfile);
-
+    /* html_generate_footer(outfile); */
+    outfile << document.ToString(CTML::StringFormatting::MULTIPLE_LINES) << std::endl;
     outfile.close();
     std::cout << "Compiled to " << paste_output << std::endl;
 

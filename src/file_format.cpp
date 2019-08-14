@@ -33,6 +33,7 @@ void generate_html_view(const std::string& file)
   // put it into an html file
   std::ofstream outfile ("build/view/"+file+".html");
   outfile << "<link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\">" << std::endl;
+  html_generate_title(outfile);
   outfile << "<body id=\"raw-body\">" << std::endl;
   outfile << htmlOutput << std::endl;
   outfile << "</body>" << std::endl;

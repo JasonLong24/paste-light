@@ -78,10 +78,12 @@ void compile_table_header(CTML::Node& node_table_container)
     // Append the table rows to the table container
     node_table_row.AppendChild(CTML::Node("th.paste-tbl-header", "Name"))
                   .AppendChild(CTML::Node("th.paste-tbl-header", "Date"))
-                  .AppendChild(CTML::Node("th.paste-tbl-header", "Filetype"));
+                  .AppendChild(CTML::Node("th.paste-tbl-header", "Filetype"))
+                  .AppendChild(CTML::Node("th.paste-tbl-header", "Raw"));
 
+    // If paste_html_view is on make that table header
     if (paste_html_view)
-      node_table_row.AppendChild(CTML::Node("th.paste-tbl-header", "View"));
+        node_table_row.AppendChild(CTML::Node("th.paste-tbl-header", "View"));
 
     node_table_container.AppendChild(node_table_row);
 }
@@ -92,6 +94,8 @@ void compile_table(std::vector<std::string> files, CTML::Node& node_table_contai
     {
         std::cout << "Found -> posts/" << files[i] << std::endl;
         format_file(files[i]);
+
+        // Create a new table row
         CTML::Node node_table_row("tr.paste-tbl-row");
 
         // Append all of the default table data cells
@@ -104,16 +108,36 @@ void compile_table(std::vector<std::string> files, CTML::Node& node_table_contai
                       .AppendChild(CTML::Node("td.paste-tbl-data",
                                    compile_get_id(files[i], "//*filetype=")))
 
-                      .AppendChild(CTML::Node("td.paste-tbl-data",
-                                   CTML::Node("a", "RAW")
-                                             .SetAttribute("href", "build/raw/"+files[i]+".paste")));
+                      .AppendChild(CTML::Node("td.paste-tbl-data")
+                                              .AppendChild(CTML::Node("a", "RAW")
+                                              .SetAttribute("href", "build/raw/"+files[i]+".paste")));
 
-        /* if (paste_html_view) */
-        /*     node_table_row.AppendChild(CTML::Node("td.paste-tbl-data"), */
-        /*                                CTML::Node("a", "VIEW") */
-        /*                                          .SetAttribute("href", "build/view/"+files[i]+".html")); */
+        // If paste_html_view is on make that table cell
+        if (paste_html_view)
+          node_table_row.AppendChild(CTML::Node("td.paste-tbl-data").AppendChild(CTML::Node("a", "VIEW")
+                                     .SetAttribute("href", "build/view/"+files[i]+".html")));
 
         node_table_container.AppendChild(node_table_row);
+    }
+}
+
+void compile_footer(CTML::Document& document)
+{
+    auto time = std::time(nullptr);
+    std::stringstream ss;
+    ss << std::put_time(std::gmtime(&time), "%D");
+
+    std::string last_updated = "Last Updated: " + ss.str();
+
+    if (!paste_plain)
+    {
+        document.AppendNodeToBody(CTML::Node("footer", last_updated));
+    }
+    else
+    {
+        CTML::Node footer("footer", last_updated + " - ");
+        footer.AppendChild(CTML::Node("a", "Shell").SetAttribute("href", paste_footerlink));
+        document.AppendNodeToBody(footer);
     }
 }
 
@@ -123,7 +147,6 @@ int paste_compile()
     get_file_list("posts", files);
 
     CTML::Document document;
-    std::ofstream outfile (paste_output);
 
     document.AppendNodeToHead(CTML::Node("link").SetAttribute("rel", "stylesheet")
                                                 .SetAttribute("type", "text/css")
@@ -147,23 +170,30 @@ int paste_compile()
     }
 
     std::cout << "Generating Table" << std::endl;
+
+    // Compile the table header and every table row
     compile_table_header(node_table_container);
     compile_table(files, node_table_container);
     document.AppendNodeToBody(node_table_container);
 
-    /* html_generate_footer(outfile); */
+    // Compile footer
+    compile_footer(document);
+
+    // Dump the html into the html file
+    std::ofstream outfile (paste_output);
     outfile << document.ToString(CTML::StringFormatting::MULTIPLE_LINES) << std::endl;
     outfile.close();
+
     std::cout << "Compiled to " << paste_output << std::endl;
 
-    if(paste_plain)
+    if (paste_plain)
     {
         compile_plain_text(files);
         std::cout << "Generating Plain Text File" << std::endl;
     }
 
-    if(paste_post != "nothing") {
+    if (paste_post != "nothing")
         system(paste_post.c_str());
-    }
+
     return 0;
 }

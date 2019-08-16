@@ -11,6 +11,6 @@ while true; do
   fi
   filename=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 8 | head -n 1)
   echo "$paste_input" > posts/"$filename".txt
-  paste --compile
+  paste-light --compile
   echo -e "File found at $(date). Assigned $filename."
 done

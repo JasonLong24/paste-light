@@ -67,9 +67,7 @@ int paste_init()
     outfile << "paste_searchbar=false" << std::endl;
     outfile << "paste_title=Pastebin" << std::endl;
     outfile << "paste_plain=false" << std::endl;
-    outfile << "paste_plain_output=txt" << std::endl;
     outfile << "paste_post=nothing" << std::endl;
-    outfile << "paste_footerlink=posts.lst" << std::endl;
     outfile << "paste_html_view=true" << std::endl;
     outfile.close();
     copy_paste("/usr/local/share/paste-light/themes/default.css", "style.css");
@@ -106,15 +104,13 @@ int parse_arguments(const int argc, char* argv[])
     {
         config.Load(paste_config);
 
-        if(!config.Get("paste_style", paste_style)               ||
-           !config.Get("paste_title", paste_title)               ||
-           !config.Get("paste_searchbar", sb)                    ||
-           !config.Get("paste_plain", paste_plain)               ||
-           !config.Get("paste_plain_output", paste_plain_output) ||
-           !config.Get("paste_host", paste_host)                 ||
-           !config.Get("paste_post", paste_post)                 ||
-           !config.Get("paste_footerlink", paste_footerlink)     ||
-           !config.Get("paste_html_view", paste_html_view)       ||
+        if(!config.Get("paste_style", paste_style)         ||
+           !config.Get("paste_title", paste_title)         ||
+           !config.Get("paste_searchbar", sb)              ||
+           !config.Get("paste_plain", paste_plain)         ||
+           !config.Get("paste_host", paste_host)           ||
+           !config.Get("paste_post", paste_post)           ||
+           !config.Get("paste_html_view", paste_html_view) ||
            !config.Get("paste_output", paste_output))
         {
             std::cout << "Problems loading configuration file.\nSee --help." << std::endl;

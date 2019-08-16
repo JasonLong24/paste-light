@@ -138,7 +138,7 @@ void compile_footer(CTML::Document& document)
     else
     {
         CTML::Node footer("footer", last_updated + " - ");
-        footer.AppendChild(CTML::Node("a", "Shell").SetAttribute("href", paste_footerlink));
+        footer.AppendChild(CTML::Node("a", "Shell").SetAttribute("href", "posts.list"));
         document.AppendNodeToBody(footer);
     }
 }
@@ -191,10 +191,7 @@ int paste_compile()
     std::cout << "Compiled to " << paste_output << std::endl;
 
     if (paste_plain)
-    {
-        compile_plain_text(files);
-        std::cout << "Generating Plain Text File" << std::endl;
-    }
+        generate_plain_text(files);
 
     if (paste_post != "nothing")
         system(paste_post.c_str());

@@ -93,6 +93,8 @@ void compile_table(std::vector<std::string> files, CTML::Node& node_table_contai
     for (unsigned int i = 0; i < files.size(); i++)
     {
         std::cout << "Found -> posts/" << files[i] << std::endl;
+
+        // Format the file name and copy it to build/raw
         format_file(files[i]);
 
         // Create a new table row
@@ -155,6 +157,8 @@ int paste_compile()
 
     document.AppendNodeToHead(CTML::Node("script").SetAttribute("charset", "utf-8")
                                                   .SetAttribute("src", "js/index.js"));
+
+    document.AppendNodeToHead(CTML::Node("title", paste_title));
 
     document.AppendNodeToBody(CTML::Node("p#paste-title", paste_title));
     CTML::Node node_table_container("table#paste-tbl-container");

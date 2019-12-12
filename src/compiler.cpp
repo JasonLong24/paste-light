@@ -58,7 +58,7 @@ std::string compile_get_id(std::string file, std::string id)
     std::istringstream f(get_file(file));
     std::string cline;
 
-    for (unsigned int i = 0; i <= 2; i++)
+    for (unsigned int i = 0; i <= 3; i++)
     {
         std::getline(f, cline);
 
@@ -76,9 +76,10 @@ void compile_table_header(CTML::Node& node_table_container)
     CTML::Node node_table_row("tr#paste-tbl-row");
 
     // Append the table rows to the table container
-    node_table_row.AppendChild(CTML::Node("th.paste-tbl-header", "Name"))
+    node_table_row.AppendChild(CTML::Node("th.paste-tbl-header", "ID"))
+                  .AppendChild(CTML::Node("th.paste-tbl-header", "Name"))
                   .AppendChild(CTML::Node("th.paste-tbl-header", "Date"))
-                  .AppendChild(CTML::Node("th.paste-tbl-header", "Filetype"))
+                  .AppendChild(CTML::Node("th.paste-tbl-header", "Type"))
                   .AppendChild(CTML::Node("th.paste-tbl-header", "Raw"));
 
     // If paste_html_view is on make that table header
@@ -102,13 +103,16 @@ void compile_table(std::vector<std::string> files, CTML::Node& node_table_contai
 
         // Append all of the default table data cells
         node_table_row.AppendChild(CTML::Node("td.paste-tbl-data",
+                                   compile_get_id(files[i], "//*id=")))
+
+                      .AppendChild(CTML::Node("td.paste-tbl-data",
                                    compile_get_id(files[i], "//*title=")))
 
                       .AppendChild(CTML::Node("td.paste-tbl-data",
                                    compile_get_id(files[i], "//*date=")))
 
                       .AppendChild(CTML::Node("td.paste-tbl-data",
-                                   compile_get_id(files[i], "//*filetype=")))
+                                   compile_get_id(files[i], "//*type=")))
 
                       .AppendChild(CTML::Node("td.paste-tbl-data")
                                               .AppendChild(CTML::Node("a", "RAW")

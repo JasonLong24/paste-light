@@ -6,6 +6,8 @@
 #include <iomanip>
 #include <algorithm>
 #include <dirent.h>
+#include <string>
+#include <random>
 #include "project/compiler.hpp"
 #include "project/configuration.hpp"
 
@@ -38,16 +40,36 @@ void show_usage(const std::string& argv)
               << std::endl;
 }
 
+std::string paste_gen_id(size_t length = 0) {
+  static const std::string allowed_chars {"123456789BCDFGHJKLMNPQRSTVWXZbcdfghjklmnpqrstvwxz"};
+
+  static thread_local std::default_random_engine randomEngine(std::random_device{}());
+  static thread_local std::uniform_int_distribution<int> randomDistribution(0, allowed_chars.size() - 1);
+
+  std::string id(length ? length : 8, '\0');
+
+  for (std::string::value_type& c : id) {
+    c = allowed_chars[randomDistribution(randomEngine)];
+  }
+
+  return id;
+}
+
 void paste_add(const std::string& filename)
 {
     auto time = std::time(nullptr);
-    std::ofstream outfile ("posts/" + filename);
-    outfile << "//*date=" << std::put_time(std::gmtime(&time), "%D")
-            << "\n//*title=Placeholder Title\n"
-            << "//*filetype=" << filename.substr(filename.find_last_of(".") + 1)
-            << std::endl;
+    static const std::string post_id       = paste_gen_id();
+    static const std::string post_filename = filename + "_" + post_id;
+
+    std::ofstream outfile ("posts/" + post_filename);
+
+    outfile << "//*date="       << std::put_time(std::gmtime(&time), "%D")
+            << "\n//*id="       << post_id
+            << "\n//*title="    << filename
+            << "\n//*type=" << std::endl;
+
     outfile.close();
-    std::cout << "Generated posts/" << filename << std::endl;
+    std::cout << "Generated posts/" << post_filename << std::endl;
 }
 
 int paste_init()
@@ -155,7 +177,8 @@ int parse_arguments(const int argc, char* argv[])
                 break;
 
             case 'o':
-                paste_output = std::string(optarg);
+                std::cout<<paste_gen_id()<<std::endl;
+                /* paste_output = std::string(optarg); */
                 break;
 
             case 160: // Style

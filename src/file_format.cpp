@@ -22,7 +22,7 @@ void generate_html_view(const std::string& file)
     copy(paste_style, "build/view/style.css");
 
     // grab the file contents
-    std::ifstream ifs("build/raw/"+file+".paste");
+    std::ifstream ifs("build/raw/" + file + ".paste");
     std::string content( (std::istreambuf_iterator<char>(ifs) ),
                          (std::istreambuf_iterator<char>()    ) );
 
@@ -61,7 +61,7 @@ void format_file(const std::string& file)
     while(std::getline(f, cline))
     {
         i++;
-        if (i > 3)
+        if (i > 4) // TODO: Make this 4 a constant. Number of file arguments.
         {
             outfile << cline << std::endl;
         }

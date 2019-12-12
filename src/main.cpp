@@ -13,7 +13,6 @@
 
 Configuration config;
 std::string paste_config = ".paste";
-std::string paste_plain_output = "txt";
 std::string paste_footerlink = "posts.lst";
 std::string paste_post;
 std::string paste_host;

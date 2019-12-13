@@ -1,17 +1,16 @@
 #include <iostream>
 #include <getopt.h>
 #include <sstream>
-#include <sys/stat.h>
-#include <fstream>
-#include <iomanip>
 #include <algorithm>
 #include <dirent.h>
-#include <string>
-#include <random>
 #include "project/compiler.hpp"
+#include "project/paste.hpp"
 #include "project/configuration.hpp"
 
 Configuration config;
+Paste paste;
+
+/* TODO declare these in a constants file */
 std::string paste_config = ".paste";
 std::string paste_footerlink = "posts.lst";
 std::string paste_post;
@@ -19,91 +18,13 @@ std::string paste_host;
 std::string paste_title;
 std::string paste_output;
 std::string paste_style;
-
-void copy_paste(const std::string& source, const std::string& destination)
-{
-    std::ifstream src(source, std::ios::binary);
-    std::ofstream dst(destination,   std::ios::binary);
-    dst << src.rdbuf();
-}
-
-bool is_paste_init()
-{
-    std::ifstream infile(".paste");
-    return infile.good();
-}
-
-void show_usage(const std::string& argv)
-{
-    std::cout << "Usage: " << argv << " NAME"
-              << std::endl;
-}
-
-std::string paste_gen_id(size_t length = 0) {
-  static const std::string allowed_chars {"123456789BCDFGHJKLMNPQRSTVWXZbcdfghjklmnpqrstvwxz"};
-
-  static thread_local std::default_random_engine randomEngine(std::random_device{}());
-  static thread_local std::uniform_int_distribution<int> randomDistribution(0, allowed_chars.size() - 1);
-
-  std::string id(length ? length : 8, '\0');
-
-  for (std::string::value_type& c : id) {
-    c = allowed_chars[randomDistribution(randomEngine)];
-  }
-
-  return id;
-}
-
-void paste_add(const std::string& filename)
-{
-    auto time = std::time(nullptr);
-    static const std::string post_id       = paste_gen_id();
-    static const std::string post_filename = filename + "_" + post_id;
-
-    std::ofstream outfile ("posts/" + post_filename);
-
-    outfile << "//*date="       << std::put_time(std::gmtime(&time), "%D")
-            << "\n//*id="       << post_id
-            << "\n//*title="    << filename
-            << "\n//*type=" << std::endl;
-
-    outfile.close();
-    std::cout << "Generated posts/" << post_filename << std::endl;
-}
-
-int paste_init()
-{
-    if(is_paste_init())
-    {
-        std::cout << "Project already initialized\nSee --help for usage." << std::endl;
-        return 1;
-    }
-
-    mkdir("posts", 0777);
-    mkdir("js", 0777);
-    std::ofstream outfile (".paste");
-    outfile << "paste_style=style.css" << std::endl;
-    outfile << "paste_host=localhost" << std::endl;
-    outfile << "paste_output=index.html" << std::endl;
-    outfile << "paste_searchbar=false" << std::endl;
-    outfile << "paste_title=Pastebin" << std::endl;
-    outfile << "paste_plain=false" << std::endl;
-    outfile << "paste_post=nothing" << std::endl;
-    outfile << "paste_html_view=true" << std::endl;
-    outfile.close();
-    copy_paste("/usr/local/share/paste-light/themes/default.css", "style.css");
-    copy_paste("/usr/local/share/paste-light/themes/js/index.js", "js/index.js");
-    std::cout << "Project initialized\nSee --help for usage." << std::endl;
-    return 0;
-}
-
 bool paste_compile_flag = false;
 
 int parse_arguments(const int argc, char* argv[])
 {
     if (argc < 2)
     {
-        show_usage(argv[0]);
+        paste.usage(argv[0]);
     }
 
     const char* const short_opts = "ia:ct:o:sh";
@@ -121,7 +42,7 @@ int parse_arguments(const int argc, char* argv[])
         {nullptr, no_argument, nullptr, 0}
     };
 
-    if(is_paste_init())
+    if(paste.is_init())
     {
         config.Load(paste_config);
 
@@ -147,7 +68,7 @@ int parse_arguments(const int argc, char* argv[])
         if (-1 == opt)
             break;
 
-        if(!is_paste_init() && opt != 'i' && opt != 'h')
+        if(!paste.is_init() && opt != 'i' && opt != 'h')
         {
             std::cout << "Please initialize this project.\n See --help for usage." << std::endl;
             return 1;
@@ -160,11 +81,11 @@ int parse_arguments(const int argc, char* argv[])
                 break;
 
             case 'a':
-                paste_add(std::string(optarg));
+                paste.add(std::string(optarg));
                 break;
 
             case 'i':
-                paste_init();
+                paste.init();
                 break;
 
             case 's':
@@ -176,8 +97,7 @@ int parse_arguments(const int argc, char* argv[])
                 break;
 
             case 'o':
-                std::cout<<paste_gen_id()<<std::endl;
-                /* paste_output = std::string(optarg); */
+                paste_output = std::string(optarg);
                 break;
 
             case 160: // Style
@@ -191,13 +111,13 @@ int parse_arguments(const int argc, char* argv[])
             case 'h':
             case '?':
             default:
-                show_usage(argv[0]);
+                paste.usage(argv[0]);
                 break;
         }
     }
 
     // Be sure paste_compile() runs last.
-    if (paste_compile_flag) paste_compile();
+    if (paste_compile_flag) paste.compile();
 
     return 0;
 }

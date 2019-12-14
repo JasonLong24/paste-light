@@ -4,7 +4,9 @@
 #include "ctml.hpp"
 #include "project/compiler.hpp"
 #include "project/html_generator.hpp"
+#include "project/paste_config.hpp"
 #include "maddy/parser.h"
+
 
 void copy(const std::string& source, const std::string& destination)
 {
@@ -19,7 +21,7 @@ void copy(const std::string& source, const std::string& destination)
 void generate_html_view(const std::string& file)
 {
     mkdir("build/view/", 0777);
-    copy(paste_style, "build/view/style.css");
+    copy(paste_config.style, "build/view/style.css");
 
     // grab the file contents
     std::ifstream ifs("build/raw/" + file + ".paste");
@@ -36,14 +38,14 @@ void generate_html_view(const std::string& file)
 
     document.AppendNodeToHead(CTML::Node("link").SetAttribute("rel", "stylesheet")
                                                 .SetAttribute("type", "text/css")
-                                                .SetAttribute("href", paste_style)
+                                                .SetAttribute("href", paste_config.style)
                                                 .UseClosingTag(false));
 
-    document.AppendNodeToHead(CTML::Node("title", paste_title + " - " + file));
+    document.AppendNodeToHead(CTML::Node("title", paste_config.title + " - " + file));
     document.AppendNodeToBody(CTML::Node("div#raw-body", htmlOutput));
 
     // append to the file
-    std::ofstream outfile ("build/view/"+file+".html");
+    std::ofstream outfile ("build/view/" + file + ".html");
     outfile << document.ToString() << std::endl;
     outfile.close();
 }
@@ -69,7 +71,7 @@ void format_file(const std::string& file)
 
     outfile.close();
 
-    if(paste_html_view) generate_html_view(file);
+    if(paste_config.html_view) generate_html_view(file);
 }
 
 void generate_plain_text(std::vector<std::string> files)
@@ -77,14 +79,14 @@ void generate_plain_text(std::vector<std::string> files)
     std::cout << "Generating Plain Text File" << std::endl;
 
     std::ofstream outfile ("posts.list");
-    outfile << paste_title << " Shell Interface\n\n"
-            << "wget -qO- " << paste_host << "/posts.lst | sed 1,5d | grep -i \"command\"\n"
-            << "curl -L "   << paste_host << "/posts.lst | sed 1,5d | grep -i \"command\"\n"
+    outfile << paste_config.title << " Shell Interface\n\n"
+            << "wget -qO- " << paste_config.host << "/posts.lst | sed 1,5d | grep -i \"command\"\n"
+            << "curl -L "   << paste_config.host << "/posts.lst | sed 1,5d | grep -i \"command\"\n"
             << std::endl;
     for (unsigned int i = 0; i < files.size(); i++)
     {
         outfile << compile_get_id(files[i], "//*title=") << " - "
-                << paste_host << "/build/"
+                << paste_config.host << "/build/"
                 << files[i] << ".paste" << std::endl;
     }
 }

@@ -8,15 +8,13 @@
 #include <iomanip>
 #include <memory>
 #include <string>
-#include "ctml.hpp"
 #include "project/compiler.hpp"
 #include "project/html_generator.hpp"
 #include "project/file_format.hpp"
+#include "project/paste_config.hpp"
 #include "maddy/parser.h"
+#include "ctml.hpp"
 
-bool sb = false;
-bool paste_plain = false;
-bool paste_html_view = true;
 
 int get_file_list(std::string dir, std::vector<std::string> &files)
 {
@@ -38,11 +36,6 @@ int get_file_list(std::string dir, std::vector<std::string> &files)
     files.erase(std::remove(files.begin(), files.end(), ".."), files.end());
     closedir(dp);
     return 0;
-}
-
-void paste_searchbar()
-{
-    sb = true;
 }
 
 std::string get_file(std::string file)
@@ -82,8 +75,8 @@ void compile_table_header(CTML::Node& node_table_container)
                   .AppendChild(CTML::Node("th.paste-tbl-header", "Type"))
                   .AppendChild(CTML::Node("th.paste-tbl-header", "Raw"));
 
-    // If paste_html_view is on make that table header
-    if (paste_html_view)
+    // If paste_config.html_view is on make that table header
+    if (paste_config.html_view)
         node_table_row.AppendChild(CTML::Node("th.paste-tbl-header", "View"));
 
     node_table_container.AppendChild(node_table_row);
@@ -118,8 +111,8 @@ void compile_table(std::vector<std::string> files, CTML::Node& node_table_contai
                                               .AppendChild(CTML::Node("a", "RAW")
                                               .SetAttribute("href", "build/raw/"+files[i]+".paste")));
 
-        // If paste_html_view is on make that table cell
-        if (paste_html_view)
+        // If paste_config.html_view is on make that table cell
+        if (paste_config.html_view)
           node_table_row.AppendChild(CTML::Node("td.paste-tbl-data").AppendChild(CTML::Node("a", "VIEW")
                                      .SetAttribute("href", "build/view/"+files[i]+".html")));
 
@@ -135,7 +128,7 @@ void compile_footer(CTML::Document& document)
 
     std::string last_updated = "Last Updated: " + ss.str();
 
-    if (!paste_plain)
+    if (!paste_config.plain)
     {
         document.AppendNodeToBody(CTML::Node("footer", last_updated));
     }
@@ -156,18 +149,18 @@ int paste_compile()
 
     document.AppendNodeToHead(CTML::Node("link").SetAttribute("rel", "stylesheet")
                                                 .SetAttribute("type", "text/css")
-                                                .SetAttribute("href", paste_style)
+                                                .SetAttribute("href", paste_config.style)
                                                 .UseClosingTag(false));
 
     document.AppendNodeToHead(CTML::Node("script").SetAttribute("charset", "utf-8")
                                                   .SetAttribute("src", "js/index.js"));
 
-    document.AppendNodeToHead(CTML::Node("title", paste_title));
+    document.AppendNodeToHead(CTML::Node("title", paste_config.title));
 
-    document.AppendNodeToBody(CTML::Node("p#paste-title", paste_title));
+    document.AppendNodeToBody(CTML::Node("p#paste-title", paste_config.title));
     CTML::Node node_table_container("table#paste-tbl-container");
 
-    if(sb)
+    if(paste_config.searchbar)
     {
         std::cout << "Generating Searchbar" << std::endl;
         document.AppendNodeToBody(CTML::Node("input").SetAttribute("placeholder", "Search Posts")
@@ -188,17 +181,17 @@ int paste_compile()
     compile_footer(document);
 
     // Dump the html into the html file
-    std::ofstream outfile (paste_output);
+    std::ofstream outfile (paste_config.output);
     outfile << document.ToString(CTML::StringFormatting::MULTIPLE_LINES) << std::endl;
     outfile.close();
 
-    std::cout << "Compiled to " << paste_output << std::endl;
+    std::cout << "Compiled to " << paste_config.output << std::endl;
 
-    if (paste_plain)
+    if (paste_config.plain)
         generate_plain_text(files);
 
-    if (paste_post != "nothing")
-        system(paste_post.c_str());
+    if (paste_config.post != "nothing")
+        system(paste_config.post.c_str());
 
     return 0;
 }

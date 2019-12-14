@@ -6,18 +6,12 @@
 #include "project/compiler.hpp"
 #include "project/paste.hpp"
 #include "project/configuration.hpp"
+#include "project/paste_config.hpp"
 
 Configuration config;
 Paste paste;
+PasteConfig paste_config;
 
-/* TODO declare these in a constants file */
-std::string paste_config = ".paste";
-std::string paste_footerlink = "posts.lst";
-std::string paste_post;
-std::string paste_host;
-std::string paste_title;
-std::string paste_output;
-std::string paste_style;
 bool paste_compile_flag = false;
 
 int parse_arguments(const int argc, char* argv[])
@@ -44,16 +38,16 @@ int parse_arguments(const int argc, char* argv[])
 
     if(paste.is_init())
     {
-        config.Load(paste_config);
+        config.Load(paste_config.config);
 
-        if(!config.Get("paste_style", paste_style)         ||
-           !config.Get("paste_title", paste_title)         ||
-           !config.Get("paste_searchbar", sb)              ||
-           !config.Get("paste_plain", paste_plain)         ||
-           !config.Get("paste_host", paste_host)           ||
-           !config.Get("paste_post", paste_post)           ||
-           !config.Get("paste_html_view", paste_html_view) ||
-           !config.Get("paste_output", paste_output))
+        if(!config.Get("paste_style",     paste_config.style)     ||
+           !config.Get("paste_title",     paste_config.title)     ||
+           !config.Get("paste_searchbar", paste_config.searchbar) ||
+           !config.Get("paste_plain",     paste_config.plain)     ||
+           !config.Get("paste_host",      paste_config.host)      ||
+           !config.Get("paste_post",      paste_config.post)      ||
+           !config.Get("paste_html_view", paste_config.html_view) ||
+           !config.Get("paste_output",    paste_config.output))
         {
             std::cout << "Problems loading configuration file.\nSee --help." << std::endl;
             return 1;
@@ -89,23 +83,23 @@ int parse_arguments(const int argc, char* argv[])
                 break;
 
             case 's':
-                paste_searchbar();
+                paste_config.searchbar = true;
                 break;
 
             case 't':
-                paste_title = std::string(optarg);
+                paste_config.title = std::string(optarg);
                 break;
 
             case 'o':
-                paste_output = std::string(optarg);
+                paste_config.output = std::string(optarg);
                 break;
 
             case 160: // Style
-                paste_style = std::string(optarg);
+                paste_config.style = std::string(optarg);
                 break;
 
             case 161: // Config
-                paste_config = std::string(optarg);
+                paste_config.config = std::string(optarg);
                 break;
 
             case 'h':

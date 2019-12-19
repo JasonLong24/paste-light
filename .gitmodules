@@ -1,9 +1,9 @@
 [submodule "libs/maddy"]
-	path = libs/maddy
+	path = include/libs/maddy
 	url = https://github.com/progsource/maddy
 [submodule "libs/doctest"]
-	path = libs/doctest
+	path = include/libs/doctest
 	url = https://github.com/onqtam/doctest
 [submodule "libs/CTML"]
-	path = libs/CTML
+	path = include/libs/CTML
 	url = https://github.com/tinfoilboy/CTML

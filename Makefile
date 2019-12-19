@@ -17,9 +17,9 @@ DEPS = $(OBJECTS:.o=.d)
 
 COMPILE_FLAGS = -std=c++11 -Wall -Wextra -g
 INCLUDES = -I include/ -I /usr/local/include
-LIBS = -I libs/maddy/include -I libs/CTML/include
+LIBS = -I include/libs/maddy/include -I include/libs/CTML/include
 
-TEST_LIBS = -I libs/CTML/include -I libs/maddy/include -I libs/doctest/doctest
+TEST_LIBS = -I include/libs/CTML/include -I include/libs/maddy/include -I include/libs/doctest/doctest
 
 .PHONY: default_target
 default_target: release

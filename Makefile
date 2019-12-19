@@ -60,9 +60,7 @@ uninstall:
 install:
 	@echo "Installing $(BIN_NAME)"
 	@cp -fv build/bin/$(BIN_NAME) /usr/bin/paste-light
-	@mkdir -p /usr/local/share/paste-light
-	@cp -r themes /usr/local/share/paste-light/themes
-	@cp -r server /usr/local/share/paste-light/server
+	@cp -r share /usr/local/share/paste-light
 	@cp -f README.md /usr/local/share/paste-light/README
 	@cp -f docs/paste-light /usr/local/man/man1/paste-light.1
 	@gzip /usr/local/man/man1/paste-light.1

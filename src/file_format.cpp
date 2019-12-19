@@ -2,18 +2,12 @@
 #include <sys/stat.h>
 #include <fstream>
 #include "ctml.hpp"
+#include "maddy/parser.h"
 #include "project/compiler.hpp"
 #include "project/html_generator.hpp"
 #include "project/paste_config.hpp"
-#include "maddy/parser.h"
+#include "project/utils/copy.hpp"
 
-
-void copy(const std::string& source, const std::string& destination)
-{
-    std::ifstream src(source, std::ios::binary);
-    std::ofstream dst(destination,   std::ios::binary);
-    dst << src.rdbuf();
-}
 
 /*
  * Called after format file, converts md to html

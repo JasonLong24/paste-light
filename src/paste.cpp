@@ -6,15 +6,7 @@
 #include <sys/stat.h>
 #include "project/paste.hpp"
 #include "project/compiler.hpp"
-
-
-/* TODO: put this in a utils file */
-void copy_paste(const std::string& source, const std::string& destination)
-{
-  std::ifstream src(source, std::ios::binary);
-  std::ofstream dst(destination,   std::ios::binary);
-  dst << src.rdbuf();
-}
+#include "project/utils/copy.hpp"
 
 
 bool Paste::is_init()
@@ -46,8 +38,8 @@ int Paste::init()
   outfile << "paste_html_view=true"     << std::endl;
   outfile.close();
 
-  copy_paste("/usr/local/share/paste-light/themes/default.css", "style.css");
-  copy_paste("/usr/local/share/paste-light/themes/js/index.js", "js/index.js");
+  copy("/usr/local/share/paste-light/themes/default.css", "style.css");
+  copy("/usr/local/share/paste-light/themes/js/index.js", "js/index.js");
 
   std::cout << "Project initialized\nSee --help for usage." << std::endl;
 

@@ -1,3 +1,5 @@
+#ifndef PASTE_H
+#define PASTE_H
 #include <iostream>
 
 using namespace std;
@@ -56,3 +58,5 @@ class Paste
      */
     string gen_post_id();
 };
+
+#endif

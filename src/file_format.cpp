@@ -4,7 +4,6 @@
 #include "ctml.hpp"
 #include "maddy/parser.h"
 #include "project/compiler.hpp"
-#include "project/html_generator.hpp"
 #include "project/paste_config.hpp"
 #include "project/utils/copy.hpp"
 

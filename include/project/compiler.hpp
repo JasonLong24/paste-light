@@ -1,3 +1,10 @@
+#ifndef COMPILER_H
+#define COMPILER_H
+
+using namespace std;
+
 int paste_compile();
-std::string get_file(std::string file);
-std::string compile_get_id(std::string file, std::string id);
+string get_file(string file);
+string compile_get_id(string file, string id);
+
+#endif

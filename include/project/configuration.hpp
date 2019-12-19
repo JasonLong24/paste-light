@@ -1,3 +1,5 @@
+#ifndef CONFIGURATION_H
+#define CONFIGURATION_H
 #include <map>
 #include <string>
 #include <fstream>
@@ -31,3 +33,5 @@ private:
     // remove leading and trailing tabs and spaces
     static string Trim(const string& str);
 };
+
+#endif

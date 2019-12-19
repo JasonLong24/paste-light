@@ -9,7 +9,6 @@
 #include <memory>
 #include <string>
 #include "project/compiler.hpp"
-#include "project/html_generator.hpp"
 #include "project/file_format.hpp"
 #include "project/paste_config.hpp"
 #include "project/utils/file.hpp"
